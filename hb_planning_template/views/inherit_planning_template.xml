@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_planning_slot_form_inherit_custom" model="ir.ui.view">
+        <field name="name">planning.slot.form.inherit.custom</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='role_id']" position="after">
+                <field name="activity"/>
+                <field name="remarks"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_planning_slot_tree_inherit_custom" model="ir.ui.view">
+        <field name="name">planning.slot.tree.inherit.custom</field>
+        <field name="model">planning.slot</field>
+        <field name="inherit_id" ref="planning.planning_view_tree"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='start_datetime']" position="before">
+                 <field name="activity"/>
+            </xpath>
+            <xpath expr="//list" position="inside">
+                <field name="remarks"/>
+            </xpath>
+            <xpath expr="//field[@name='role_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+<!--        <xpath expr="//field[@name='resource_id']" position="attributes">-->
+<!--            <attribute name="invisible">1</attribute>-->
+<!--        </xpath>-->
+        </field>
+    </record>
+</odoo>

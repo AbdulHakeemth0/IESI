@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_project_material_line,access.project.material.line,model_project_material_line,base.group_user,1,1,1,1
+access_rfq_creation_wizard,access.rfq.creation.wizard,model_rfq_creation_wizard,base.group_user,1,1,1,1
+access_rfq_creation_wizard_lines,access.rfq.creation.wizard.lines,model_rfq_creation_wizard_lines,base.group_user,1,1,1,1
+access_project_material_template,access.project.material.template,model_project_material_template,base.group_user,1,1,1,1
+access_project_material_template_lines,access.project.material.template.lines,model_project_material_template_line,base.group_user,1,1,1,1
+access_project_event,access.project.event,model_project_event,base.group_user,1,1,1,1
+access_project_event_line,access.project.event.line,model_project_event_line,base.group_user,1,1,1,1
+access_material_request_wizard,access.material.request.wizard,model_material_request_wizard,base.group_user,1,1,1,1
+access_material_wizard_lines,access.material.wizard.lines,model_material_wizard_lines,base.group_user,1,1,1,1

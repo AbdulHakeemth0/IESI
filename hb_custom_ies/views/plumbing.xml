@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record id="view_plumbing_item_tree" model="ir.ui.view">
+        <field name="name">plumbing.item.tree</field>
+        <field name="model">plumbing</field>
+        <field name="arch" type="xml">
+            <list string="Plumbing Items">
+                <field name="plumbing_name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_plumbing_item_form" model="ir.ui.view">
+        <field name="name">plumbing.item.form</field>
+        <field name="model">plumbing</field>
+        <field name="arch" type="xml">
+            <form string="Plumbing Item">
+                <sheet>
+                    <group>
+                        <field name="plumbing_name"/>
+                        <field name="plumbing_unit_rate" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+     <record id="action_plumbing_items" model="ir.actions.act_window">
+        <field name="name">Plumbing Items</field>
+        <field name="res_model">plumbing</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_plumbing_root" name="Plumbing" parent="sale.menu_sale_config" action="action_plumbing_items" sequence="10"/>
+</odoo>

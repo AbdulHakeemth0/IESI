@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_water_supply_item_tree" model="ir.ui.view">
+        <field name="name">water.supply.item.tree</field>
+        <field name="model">water.supply</field>
+        <field name="arch" type="xml">
+            <list string="Water Supply Items">
+                <field name="water_name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_water_supply_item_form" model="ir.ui.view">
+        <field name="name">water.supply.item.form</field>
+        <field name="model">water.supply</field>
+        <field name="arch" type="xml">
+            <form string="Water Supply Item">
+                <sheet>
+                    <group>
+                        <field name="water_name"/>
+                        <field name="water_unit_rate" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+     <record id="action_water_items" model="ir.actions.act_window">
+        <field name="name">Water Supply Items</field>
+        <field name="res_model">water.supply</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_water_root"
+              name="Water Supply"
+              parent="sale.menu_sale_config"
+              action="action_water_items" sequence="10"/>
+</odoo>

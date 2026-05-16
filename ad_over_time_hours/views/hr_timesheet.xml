@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_timesheet_tree_inherit_ot_taxi" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.inherit.ot.taxi</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.timesheet_view_tree_user"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="department_id" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='unit_amount']" position="after">
+                <field name="ot_hours" sum="Total OT" readonly="0"/>
+                <field name="taxi_amount" sum="Taxi"/>
+            </xpath>
+
+        </field>
+    </record>
+    <record id="view_timesheet_tree_inherit_hide_so_line" model="ir.ui.view">
+        <field name="name">account.analytic.line.tree.inherit.so.line</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="sale_timesheet.hr_timesheet_line_tree_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='so_line']" position="attributes">
+<!--                <attribute name="invisible">1</attribute>-->
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

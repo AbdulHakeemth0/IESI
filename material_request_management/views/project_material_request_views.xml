@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sample form view -->
+    <record id="material_request_management_view_form" model="ir.ui.view">
+        <field name="name">material.request.management.view.form</field>
+        <field name="model">project.material.request</field>
+        <field name="arch" type="xml">
+            <form string="Material Request">
+                <header>
+                    <button name="action_request_approval"
+                            string="MR Approve" type="object"
+                            invisible="state != 'draft'"
+                            class="btn-primary"/>
+                    <button name="action_approve"
+                            string="Approve" type="object"
+                            invisible="state != 'to_approve'"
+                            class="btn-primary"/>
+                    <button name="action_reject"
+                            string="Reject" type="object"
+                            invisible="state == 'draft'"
+                            class="btn-primary"/>
+                    <button name="action_purchase_order"
+                            string="Create PO" type="object"
+                            invisible="state != 'approved'"
+                            class="btn-primary"/>
+                    <button name="action_delivery_order"
+                            string="Create Direct DN" type="object"
+                            invisible="state != 'approved'"
+                            class="btn-primary"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_view_purchases"
+                                icon="fa-credit-card">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Purchases</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" type="object"
+                                name="action_view_delivery_order"
+                                icon="fa-files-o">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Delivery Note</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="project_id"/>
+                            <field name="sale_order_id"/>
+                            <field name="task_id"/>
+                            <field name="requested_by"/>
+                        </group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="date"/>
+                            <field name="company_id"/>
+                            <field name="notes"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Materials">
+                            <field name="material_ids" readonly="state == 'approved'">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="name"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="task_id"/>
+                                    <field name="done_quantity"/>
+                                    <field name="status" decoration-info="status == 'to_delivered'"
+                                           decoration-success="status == 'delivered'"
+                                           widget="badge"/>
+                                    <field name="request_id" column_invisible="1"/>
+                                    <field name="project_material_line_id" column_invisible="1"/>
+                                    <field name="po_ids" column_invisible="1"/>
+                                    <field name="dn_ids" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+<!--                        <xpath expr="//notebook/page[@name='material_ids']" position="after">-->
+                            <page name="other_info" string="Other Info">
+                                <group>
+                                    <field name="prepared_by" widget="many2one" options="{'no_create': True}"/>
+                                    <field name="approved_by" widget="many2one" options="{'no_create': True}"/>
+                                    <field name="company_id" readonly="1"/>
+                                </group>
+                            </page>
+<!--                        </xpath>-->
+                        <page string="Details">
+                            <field name="description"/>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Sample list view -->
+    <record id="material_request_management_view_list" model="ir.ui.view">
+        <field name="name">material.request.management.view.list</field>
+        <field name="model">project.material.request</field>
+        <field name="arch" type="xml">
+            <list string="Samples">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="project_id"/>
+                <field name="sale_order_id"/>
+                <field name="task_id"/>
+                <field name="state"/>
+            </list>
+<!--             <xpath expr="//list/field[@name='state']" position="before">-->
+<!--                    <field name="approved_by"/>-->
+<!--                </xpath>-->
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="material_request_management_view_kanban" model="ir.ui.view">
+        <field name="name">material.request.management.view.kanban</field>
+        <field name="model">project.material.request</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="name"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="material_request_management_view_search" model="ir.ui.view">
+        <field name="name">material.request.management.view.search</field>
+        <field name="model">project.material.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="sale_order_id"/>
+                <filter string="Draft" name="filter_draft" domain="[('state','=','draft')]"/>
+                <filter string="Confirmed" name="filter_confirmed"
+                        domain="[('state','=','confirmed')]"/>
+                <filter string="Done" name="filter_done" domain="[('state','=','done')]"/>
+            </search>
+        </field>
+    </record>
+
+
+
+
+
+    <!-- Action -->
+    <record id="material_request_management_action" model="ir.actions.act_window">
+        <field name="name">Material Requests</field>
+        <field name="res_model">project.material.request</field>
+        <field name="view_mode">list,form,kanban</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem name="Material Requests"
+              id="material_request_management_menu"
+              parent="purchase.menu_purchase_root"
+              sequence="3"
+              action="material_request_management_action"/>
+</odoo>

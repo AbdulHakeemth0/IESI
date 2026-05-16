@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="seq_account_move_project" model="ir.sequence">
+        <field name="name">Account Move Project</field>
+        <field name="code">account.move.seq</field>
+        <field name="prefix">IESI/IN/P/%(y)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_account_move_trading" model="ir.sequence">
+        <field name="name">Account Move Trading</field>
+        <field name="code">account.move.tra</field>
+        <field name="prefix">IESI/IN/T/%(y)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_account_move_maintenance" model="ir.sequence">
+        <field name="name">Account Move Maintenance</field>
+        <field name="code">account.move.main</field>
+        <field name="prefix">IESI/IN/M/%(y)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+</odoo>

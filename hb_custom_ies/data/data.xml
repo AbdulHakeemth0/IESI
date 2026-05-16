@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="project_discipline_electrical" model="project.discipline">
+            <field name="name">Electrical</field>
+        </record>
+        <record id="project_discipline_plumbing" model="project.discipline">
+            <field name="name">Plumbing</field>
+        </record>
+        <record id="project_discipline_water_supply" model="project.discipline">
+            <field name="name">Water Supply</field>
+        </record>
+        <record id="project_discipline_fire_alarm" model="project.discipline">
+            <field name="name">Fire Alarm</field>
+        </record>
+        <record id="project_discipline_fire_fighting" model="project.discipline">
+            <field name="name">Fire Fighting</field>
+        </record>
+        <record id="project_discipline_drinage" model="project.discipline">
+            <field name="name">Drainage</field>
+        </record>
+        <record id="project_discipline_civil" model="project.discipline">
+            <field name="name">Civil</field>
+        </record>
+        <record id="project_discipline_elv" model="project.discipline">
+            <field name="name">ELV</field>
+        </record>
+        <record id="project_discipline_mep" model="project.discipline">
+            <field name="name">MEP</field>
+        </record>
+        <record id="project_discipline_hvac" model="project.discipline">
+            <field name="name">HVAC</field>
+        </record>
+    </data>
+</odoo>

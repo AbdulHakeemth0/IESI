@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="material_request_wizard_view_form" model="ir.ui.view">
+        <field name="name">material.request.wizard.view.form</field>
+        <field name="model">material.request.wizard</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Material Request">
+                <group>
+                    <field name="project_id" invisible="1"/>
+                    <field name="task_id" invisible="1"/>
+                </group>
+                <notebook>
+                    <page name="material_line" string="Materials">
+                        <field name="material_ids">
+                            <list name="Material Details" editable="bottom">
+                                <field name="wizard_id" column_invisible="1"/>
+                                <field name="product_uom_category_id" column_invisible="1"/>
+                                <field name="product_id"/>
+                                <field name="quantity"/>
+                                <field name="line_id" column_invisible="1"/>
+                                <field name="uom_id"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+                <newline/>
+                <footer>
+                    <button name="action_create_delivery_not"
+                            string="Confirm Material Request"
+                            type="object"
+                            invisible="1"
+                            class="oe_highlight"/>
+                    <button name="action_create_mr"
+                            string="Confirm"
+                            type="object"
+                            class="oe_highlight"/>
+                    <button special="cancel" string="Cancel" class="oe_link"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

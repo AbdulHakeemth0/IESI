@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_hr_contract_form_inherit_ad" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit.ad</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add fields after wage -->
+            <xpath expr="//field[@name='schedule_pay']" position="after">
+                <field name="daily_working_hours"/>
+                <field name="daily_wage"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

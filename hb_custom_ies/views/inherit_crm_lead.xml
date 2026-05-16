@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_crm_lead_form_inherit_project_details" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.project.details</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+
+
+            <xpath expr="//div[@class='oe_title']//field[@name='name']" position="before">
+                <field name="seq_no" readonly="1" class="oe_inline me-2"/>
+            </xpath>
+<!--           <xpath expr="//div[field[@name='email_from']]" position="before">-->
+<!--&lt;!&ndash;                <label for="address"  string="Address"/>&ndash;&gt;-->
+<!--                <field name="address"/>-->
+<!--            </xpath>-->
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="project_type"/>
+                <field name="scope_type" invisible="1"/>
+                <field name="color" type="measure" invisible="1"/>
+                <field name="project_discipline_ids"
+                       options="{'color_field': 'color'}"
+                       widget="many2many_tags"/>
+            </xpath>
+            <xpath expr="//div[field[@name='phone']]" position="after">
+                <field name="address"/>
+                 <field name="scope_title"/>
+                 <field name="reference"/>
+                <field name="location"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_crm_lead_tree_inherit_project_details" model="ir.ui.view">
+        <field name="name">crm.lead.tree.inherit.project.details</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="seq_no" readonly="1"/>
+            </xpath>
+
+            <!-- Add after Salesperson -->
+            <xpath expr="//field[@name='contact_name']" position="after">
+                <field name="project_type"/>
+                <field name="scope_type"/>
+            </xpath>
+
+            <!-- Add after Phone -->
+            <xpath expr="//field[@name='email_from']" position="after">
+                <field name="scope_title"/>
+                <field name="reference"/>
+                <field name="location"/>
+            </xpath>
+
+        </field>
+    </record>
+    <record id="crm_lead_placeholder_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.placeholder.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="placeholder">Project Name</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_purchase_order_form_inherit_custom" model="ir.ui.view">
+        <field name="name">purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_qty']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+
+            <!-- Update Button Visibility-->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="approved_bool" invisible="1"/>
+                <field name="approve_requested" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='button_confirm'][1]" position="attributes">
+                <attribute name="invisible">state not in ('draft', 'sent') or approved_bool != True
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='button_confirm'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='print_quotation']" position="attributes">
+                <attribute name="invisible">approved_bool != True</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_rfq_send']" position="attributes">
+                <attribute name="invisible">approved_bool != True</attribute>
+            </xpath>
+            <xpath expr="//button[@name='print_quotation']" position="after">
+                <button name="action_request_approve" string="Request Approve" type="object" class="oe_highlight"
+                        invisible="state != 'draft' or approved_bool != False or approve_requested != False"/>
+                <button name="action_approve" string="Approve" type="object" class="oe_highlight"
+                        invisible="state != 'to_approve' or approved_bool != False or approve_requested != True"/>
+            </xpath>
+
+            <!-- Adding Reject Reason Page -->
+<!--            <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">-->
+<!--                <page string="Reject Reason" invisible="state != 'rejected'">-->
+<!--                    <group>-->
+<!--                        <field name="reject_reason"/>-->
+<!--                    </group>-->
+<!--                </page>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+</odoo>

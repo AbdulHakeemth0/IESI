@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_mode_payment_tree" model="ir.ui.view">
+        <field name="name">mode.payment.tree</field>
+        <field name="model">mode.payment</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="m_name"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_mode_payment_form" model="ir.ui.view">
+        <field name="name">mode.payment.form</field>
+        <field name="model">mode.payment</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="m_name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Action -->
+    <record id="action_mode_payment" model="ir.actions.act_window">
+        <field name="name">Mode Payment</field>
+        <field name="res_model">mode.payment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <record id="view_purchase_order_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='currency_id']" position="before">
+                <field name="mode_ids"/>
+                <field name="scope"/>
+                <field name="quote_date"/>
+            </xpath>
+            <xpath expr="//field[@name='project_id']" position="after">
+                <field name="payment_terms"/>
+<!--                <field name="project_name" readonly="1"/>-->
+            </xpath>
+<!--            <xpath expr="//sheet/group" position="inside">-->
+<!--            <field name="project_id" context="{'po_project_name_only': True}"/>-->
+<!--        </xpath>-->
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_mode_payment_root"
+              name="Mode Payment"
+              parent="purchase.menu_procurement_management"
+              action="action_mode_payment"/>
+</odoo>

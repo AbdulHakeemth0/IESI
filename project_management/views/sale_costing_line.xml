@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_order_form_inherit_project_management" model="ir.ui.view">
+        <field name="name">sale.order.form.project</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="hb_custom_ies.view_order_form_inherit_electric"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_costing_lines']/list/field[@name='quantity']"
+                   position="after">
+                <field name="template_line_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

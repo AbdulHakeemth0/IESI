@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Apply the watermark to the pdf report with mentioned specifications-->
+<odoo>
+    <template id="pdf_watermark_report"
+              inherit_id="web.basic_layout">
+        <xpath expr="//div[hasclass('article')]" position="after">
+            <t t-set="company" t-value="doc.company_id"/>
+            <h3><t t-esc="company"/></h3>
+            <t t-if="company.watermark">
+            </t>
+        </xpath>
+    </template>
+</odoo>

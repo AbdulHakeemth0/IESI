@@ -1,0 +1,30 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_electrical_item_user,electrical.item user,model_electrical_item,base.group_user,1,1,1,1
+access_hvac_item_user,hvac.item user,model_hvac_item,base.group_user,1,1,1,1
+access_sundering_user,sundering user,model_sundering,base.group_user,1,1,1,1
+access_measurement_user,measurement user,model_measurement,base.group_user,1,1,1,1
+access_mep_item_user,mep.item user,model_mep_item,base.group_user,1,1,1,1
+access_plumbing_user,plumbing user,model_plumbing,base.group_user,1,1,1,1
+access_water_supply_user,water supply user,model_water_supply,base.group_user,1,1,1,1
+access_sun_items_user,water sun_items,model_sun_items,base.group_user,1,1,1,1
+access_sale_general_user,access_sale_general,model_sale_general,base.group_user,1,1,1,1
+access_sale_measurement_user,access_sale_measurement,model_sale_measurement,base.group_user,1,1,1,1
+access_sale_drainage_line,access_sale_drainage_line,model_sale_drainage_line,base.group_user,1,1,1,1
+access_drainage_item,access_drainage_item,model_drainage_item,base.group_user,1,1,1,1
+access_sale_civil_line,access_sale_civil_line,model_sale_civil_line,base.group_user,1,1,1,1
+access_civil_item,access_civil_item,model_civil_item,base.group_user,1,1,1,1
+access_elv_item,access_elv_item,model_elv_item,base.group_user,1,1,1,1
+access_sale_elv_line,access_sale_elv_line,model_sale_elv_line,base.group_user,1,1,1,1
+access_fire_fighting_item,access_fire_fighting_item,model_fire_fighting_item,base.group_user,1,1,1,1
+access_sale_fire_fighting_line,access_sale_fire_fighting_line,model_sale_fire_fighting_line,base.group_user,1,1,1,1
+access_sale_fire_alarm_line,access_sale_fire_alarm_line,model_sale_fire_alarm_line,base.group_user,1,1,1,1
+access_fire_alarm_item,access_fire_alarm_item,model_fire_alarm_item,base.group_user,1,1,1,1
+access_sale_mep_line,access_sale_mep_line,model_sale_mep_line,base.group_user,1,1,1,1
+access_sale_plumbing_line,access_sale_plumbing_line,model_sale_plumbing_line,base.group_user,1,1,1,1
+access_sale_water_supply_line,access_sale_water_supply_line,model_sale_water_supply_line,base.group_user,1,1,1,1
+access_sale_hvac_line,access_sale_hvac_line,model_sale_hvac_line,base.group_user,1,1,1,1
+access_sale_electrical_line,access_sale_electrical_line,model_sale_electrical_line,base.group_user,1,1,1,1
+access_mesurement_measurement,access_mesurement_measurement,model_mesurement_measurement,base.group_user,1,1,1,1
+access_sale_return_wizard,sale.return.wizard,model_sale_return_wizard,base.group_user,1,1,1,1
+access_sale_costing_line,access.sale.costing.line,model_sale_costing_line,base.group_user,1,1,1,1
+access_project_discipline,access.project.discipline,model_project_discipline,base.group_user,1,1,1,1

@@ -1,0 +1,1273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_sale_order_form_inherit_margin" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.margin</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/list/field[@name='price_unit']"
+                   position="after">
+                <field name="margin_amount" column_invisible="1"/>
+            </xpath>
+             <xpath expr="//header/field[@name='state']" position="replace">
+            <field name="state" widget="statusbar"
+                   statusbar_visible="draft,sale,done,cancel"/>
+        </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_order_tree_inherit_hb_custom_ies" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit.custom</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="revision_name"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_form_hide_client_ref" model="ir.ui.view">
+        <field name="name">sale.order.form.hide.client</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_preview_sale_order']" position="before">
+                <!-- Draft → Review -->
+                <button name="action_review"
+                        string="Send to Review"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'prepared'"/>
+
+                <button name="action_prepare"
+                        string="Mark as Prepared"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'draft'"/>
+
+                <button name="action_submit_quote"
+                        string="Submit Quote"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'review'"/>
+
+                <button name="action_print_sale_quotation"
+                        string="Print SO"
+                        type="object"
+                        invisible="state != 'client_review'"
+                        class="btn-primary"/>
+
+                <!-- Review → Approve -->
+                <button name="action_approve"
+                        string="Approve"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'client_review'"/>
+
+                <button name="action_revise_quote"
+                        string="Revise"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state not in ('review', 'client_review')"/>
+
+                <button name="action_reject_quote"
+                        string="Reject"
+                        type="object"
+                        invisible="state != 'client_review'"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_revisions"
+                        type="object"
+                        string="Revisions"
+                        class="oe_stat_button"
+                        invisible="state != 'revised'"
+                        icon="fa-files-o">
+                    <field name="child_revision_ids" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//button[@id='send_by_email_primary']" position="attributes">
+                <attribute name="invisible">state != 'client_review'</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_preview_sale_order']" position="attributes">
+                <attribute name="invisible">state != 'draft'</attribute>
+            </xpath>
+            <xpath expr="//button[@id='send_by_email']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm'][2]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='sale_order_template_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='date_order']" position="after">
+                <field name="revision_no" invisible="1"/>
+                <field name="revision_name"/>
+                <field name="parent_revision_id" invisible="1"/>
+                <field name="child_revision_ids" widget="many2many_tags" invisible="1"/>
+                <field name="is_revised" invisible="1"/>
+                <field name="root_revision_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="sale_project_bool" invisible="1"/>
+                <field name="project_discipline_ids" widget="many2many_tags"
+                       options="{'no_create': True}"/>
+                <field name="costing_total_amount" widget="monetary"
+                       options="{'currency_field': 'currency_id'}"/>
+                <field name="is_plumbing" invisible="1"/>
+                <field name="is_water_supply" invisible="1"/>
+                <field name="is_mep" invisible="1"/>
+                <field name="is_electrical" invisible="1"/>
+                <field name="is_hvac" invisible="1"/>
+                <field name="is_drainage" invisible="1"/>
+                <field name="is_civil" invisible="1"/>
+                <field name="is_elv" invisible="1"/>
+                <field name="is_fire_fighting" invisible="1"/>
+                <field name="is_fire_alarm" invisible="1"/>
+                <field name="sub_total_costing" widget="monetary" invisible="1"/>
+                <field name="sub_total" invisible="1"/>
+                <field name="plumbing_discipline_id" invisible="1"/>
+                <field name="electrical_discipline_id" invisible="1"/>
+                <field name="water_supply_discipline_id" invisible="1"/>
+                <field name="fire_alarm_discipline_id" invisible="1"/>
+                <field name="fire_fighting_discipline_id" invisible="1"/>
+                <field name="drainage_discipline_id" invisible="1"/>
+                <field name="civil_discipline_id" invisible="1"/>
+                <field name="elv_discipline_id" invisible="1"/>
+                <field name="mep_discipline_id" invisible="1"/>
+                <field name="hvac_discipline_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="project_name"/>
+                <field name="project_type"/>
+                <field name="scope_work"/>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']" position="attributes">
+                <attribute name="string">Quote</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='price_unit']"
+                   position="attributes">
+                <attribute name="string">Rate</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']"
+                   position="after">
+                <field name="unit"/>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="return_reason" readonly="1"/>
+            </xpath>
+            <xpath expr="//page[@name='optional_products']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@name='customer_signature']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_order_form_inherit_electric" model="ir.ui.view">
+        <field name="name">sale.order.form.electrical</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page[@name='order_lines']" position="after">
+                <page string="Electrical" invisible="1">
+                    <field name="electrical_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="electrical_item_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="unit_price" column_invisible="1"/>
+                            <field name="total_price"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="HVAC" invisible="1">
+                    <field name="hvac_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="hvac_item_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="unit_price" column_invisible="1"/>
+                            <field name="total_price"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="MEP" invisible="1">
+                    <field name="mep_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="mep_item_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="unit_price" column_invisible="1"/>
+                            <field name="total_price"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="PLUMBING" invisible="1">
+                    <field name="plumbing_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="plumbing_item_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="unit_price" column_invisible="1"/>
+                            <field name="total_price"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Water Supply" invisible="1">
+                    <field name="water_supply_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="water_supply_item_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="unit_price" column_invisible="1"/>
+                            <field name="total_price"/>
+                        </list>
+                    </field>
+                </page>
+
+                <page string="Drainage" invisible="1">
+                    <field name="drainage_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="drainage_item_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="unit_price"/>
+                            <field name="total_price" readonly="1"/>
+                        </list>
+                    </field>
+                </page>
+
+                <page string="Civil" invisible="1">
+                    <field name="civil_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="civil_item_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="unit_price"/>
+                            <field name="total_price" readonly="1"/>
+                        </list>
+                    </field>
+                </page>
+
+                <page string="ELV" invisible="1">
+                    <field name="elv_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="elv_item_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="unit_price"/>
+                            <field name="total_price" readonly="1"/>
+                        </list>
+                    </field>
+                </page>
+
+                <page string="Fire Fighting" invisible="1">
+                    <field name="fire_fighting_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="fire_fighting_item_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="unit_price"/>
+                            <field name="total_price" readonly="1"/>
+                        </list>
+                    </field>
+                </page>
+
+
+                <page string="Fire Alarm" invisible="1">
+                    <field name="fire_alarm_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="fire_alarm_item_id"/>
+                            <field name="description"/>
+                            <field name="quantity"/>
+                            <field name="unit_price"/>
+                            <field name="total_price" readonly="1"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Sundries" invisible="1">
+                    <field name="sun_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="sun_items"/>
+                            <field name="sun_qty_item"/>
+                            <field name="sun_unit_price_item"/>
+                            <field name="sun_amount_item"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="General" invisible="1">
+                    <field name="general_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="gen_item"/>
+                            <field name="gen_qty_item"/>
+                            <field name="gen_unit_price_item"/>
+                            <field name="gen_amount_item"/>
+                        </list>
+                    </field>
+                </page>
+
+                <page string="Electrical Costing Details"
+                      invisible="electrical_discipline_id not in project_discipline_ids">
+                    <field name="sale_costing_lines" widget="section_and_note_one2many"
+                           mode="list" context="{'default_display_type': False}"
+                           readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <control>
+                                <create name="add_product_control"
+                                        string="Add a line"/>
+                                <create name="add_section_control"
+                                        string="Add a section"
+                                        context="{'default_display_type': 'line_section'}"/>
+                                <create name="add_note_control"
+                                        string="Add a note"
+                                        context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="sale_order_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="display_type" column_invisible="1"/>
+                            <field name="product_id" required="not display_type"/>
+                            <field name="quantity" required="not display_type"/>
+                            <field name="uom_id" required="not display_type"/>
+                            <field name="product_uom_category_id" column_invisible="1"/>
+                            <field name="name"/>
+                            <field name="unit_price" widget="monetary" required="not display_type"/>
+                            <field name="total_price" widget="monetary"/>
+                            <field name="is_material"/>
+                        </list>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right">
+
+                        <field name="margin_percentage"/>
+                        <field name="margin_amount" readonly="1"/>
+
+                        <field name="total_costing_amount"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                        <field name="sub_total_costing"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+                </page>
+                <page string="Plumbing Costing Details"
+                      invisible="plumbing_discipline_id not in project_discipline_ids">
+                    <field name="plumbing_costing_lines" widget="section_and_note_one2many"
+                           mode="list" context="{'default_display_type': False}"
+                           readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <control>
+                                <create name="add_product_control"
+                                        string="Add a line"/>
+                                <create name="add_section_control"
+                                        string="Add a section"
+                                        context="{'default_display_type': 'line_section'}"/>
+                                <create name="add_note_control"
+                                        string="Add a note"
+                                        context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="sale_plumbing_line_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="display_type" column_invisible="1"/>
+                            <field name="product_id" required="not display_type"/>
+                            <field name="quantity" required="not display_type"/>
+                            <field name="uom_id" required="not display_type"/>
+                            <field name="product_uom_category_id" column_invisible="1"/>
+                            <field name="name"/>
+                            <field name="unit_price" widget="monetary" required="not display_type"/>
+                            <field name="total_price" widget="monetary"/>
+                            <field name="is_material"/>
+                        </list>
+                    </field>
+                     <group class="oe_subtotal_footer oe_right">
+
+                        <field name="plumbing_margin_percentage"/>
+                        <field name="plumbing_margin_amount" readonly="1"/>
+
+                        <field name="total_plumbing_costing_amount"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                        <field name="sub_total_plumbing_costing"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+<!--                    <group class="oe_subtotal_footer oe_right">-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="plumbing_margin_percentage"/>-->
+
+<!--                            <div>-->
+<!--                                <field name="plumbing_margin_percentage" class="oe_inline"/>-->
+<!--                            </div>-->
+<!--                            <label for="plumbing_margin_amount"/>-->
+<!--                            <div>-->
+<!--                                 <field name="plumbing_margin_amount" class="oe_inline"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="total_plumbing_costing_amount"/>-->
+<!--                            <div>-->
+<!--                                <field name="total_plumbing_costing_amount" nolabel="1" readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="sub_total_plumbing_costing"/>-->
+<!--                            <div>-->
+<!--                                <field name="sub_total_plumbing_costing" nolabel="1" readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </group>-->
+                </page>
+                <page string="Water Supply Costing Details"
+                      invisible="water_supply_discipline_id not in project_discipline_ids">
+                    <field name="water_supply_costing_lines" widget="section_and_note_one2many"
+                           mode="list" context="{'default_display_type': False}"
+                           readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <control>
+                                <create name="add_product_control"
+                                        string="Add a line"/>
+                                <create name="add_section_control"
+                                        string="Add a section"
+                                        context="{'default_display_type': 'line_section'}"/>
+                                <create name="add_note_control"
+                                        string="Add a note"
+                                        context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="sale_water_supply_line_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="display_type" column_invisible="1"/>
+                            <field name="product_id" required="not display_type"/>
+                            <field name="quantity" required="not display_type"/>
+                            <field name="uom_id" required="not display_type"/>
+                            <field name="product_uom_category_id" column_invisible="1"/>
+                            <field name="name"/>
+                            <field name="unit_price" widget="monetary" required="not display_type"/>
+                            <field name="total_price" widget="monetary"/>
+                            <field name="is_material"/>
+                        </list>
+                    </field>
+
+                     <group class="oe_subtotal_footer oe_right">
+
+                        <field name="water_supply_margin_percentage"/>
+                        <field name="water_supply_margin_amount" readonly="1"/>
+
+                        <field name="total_water_supply_costing_amount"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                        <field name="sub_total_water_supply_costing"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+<!--                    <group class="oe_subtotal_footer oe_right">-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="water_supply_margin_percentage"/>-->
+<!--                            <div>-->
+<!--                                <field name="water_supply_margin_percentage" class="oe_inline"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="total_water_supply_costing_amount"/>-->
+<!--                            <div>-->
+<!--                                <field name="total_water_supply_costing_amount" nolabel="1"-->
+<!--                                       readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="sub_total_water_supply_costing"/>-->
+<!--                            <div>-->
+<!--                                <field name="sub_total_water_supply_costing" nolabel="1"-->
+<!--                                       readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </group>-->
+                </page>
+                <page string="Fire Alarm Costing Details"
+                      invisible="fire_alarm_discipline_id not in project_discipline_ids">
+                    <field name="fire_alarm_costing_lines" widget="section_and_note_one2many"
+                           mode="list" context="{'default_display_type': False}"
+                           readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <control>
+                                <create name="add_product_control"
+                                        string="Add a line"/>
+                                <create name="add_section_control"
+                                        string="Add a section"
+                                        context="{'default_display_type': 'line_section'}"/>
+                                <create name="add_note_control"
+                                        string="Add a note"
+                                        context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="sale_fire_alarm_line_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="display_type" column_invisible="1"/>
+                            <field name="product_id" required="not display_type"/>
+                            <field name="quantity" required="not display_type"/>
+                            <field name="uom_id" required="not display_type"/>
+                            <field name="product_uom_category_id" column_invisible="1"/>
+                            <field name="name"/>
+                            <field name="unit_price" widget="monetary" required="not display_type"/>
+                            <field name="total_price" widget="monetary"/>
+                            <field name="is_material"/>
+                        </list>
+                    </field>
+                     <group class="oe_subtotal_footer oe_right">
+
+                        <field name="fire_alarm_margin_percentage"/>
+                        <field name="fire_alarm_margin_amount" readonly="1"/>
+
+                        <field name="fire_alarm_costing_amount"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                        <field name="sub_total_fire_alarm_costing"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+                </page>
+                <page string="Fire Fighting Costing Details"
+                      invisible="fire_fighting_discipline_id not in project_discipline_ids">
+                    <field name="fire_fighting_costing_lines" widget="section_and_note_one2many"
+                           mode="list" context="{'default_display_type': False}"
+                           readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <control>
+                                <create name="add_product_control"
+                                        string="Add a line"/>
+                                <create name="add_section_control"
+                                        string="Add a section"
+                                        context="{'default_display_type': 'line_section'}"/>
+                                <create name="add_note_control"
+                                        string="Add a note"
+                                        context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="sale_fire_fighting_line_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="display_type" column_invisible="1"/>
+                            <field name="product_id" required="not display_type"/>
+                            <field name="quantity" required="not display_type"/>
+                            <field name="uom_id" required="not display_type"/>
+                            <field name="product_uom_category_id" column_invisible="1"/>
+                            <field name="name"/>
+                            <field name="unit_price" widget="monetary" required="not display_type"/>
+                            <field name="total_price" widget="monetary"/>
+                            <field name="is_material"/>
+                        </list>
+                    </field>
+                     <group class="oe_subtotal_footer oe_right">
+
+                        <field name="fire_fighting_margin_percentage"/>
+                        <field name="fire_fighting_margin_amount" readonly="1"/>
+
+                        <field name="fire_fighting_costing_amount"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                        <field name="sub_total_fire_fighting_costing"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+
+
+
+<!--                    <group class="oe_subtotal_footer oe_right">-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="fire_fighting_margin_percentage"/>-->
+<!--                            <div>-->
+<!--                                <field name="fire_fighting_margin_percentage" class="oe_inline"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="fire_fighting_costing_amount"/>-->
+<!--                            <div>-->
+<!--                                <field name="fire_fighting_costing_amount" nolabel="1" readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="sub_total_fire_fighting_costing"/>-->
+<!--                            <div>-->
+<!--                                <field name="sub_total_fire_fighting_costing" nolabel="1"-->
+<!--                                       readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </group>-->
+                </page>
+
+                <page string="Drainage Costing Details"
+                      invisible="drainage_discipline_id not in project_discipline_ids">
+                    <field name="drainage_costing_lines" widget="section_and_note_one2many"
+                           mode="list" context="{'default_display_type': False}"
+                           readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <control>
+                                <create name="add_product_control"
+                                        string="Add a line"/>
+                                <create name="add_section_control"
+                                        string="Add a section"
+                                        context="{'default_display_type': 'line_section'}"/>
+                                <create name="add_note_control"
+                                        string="Add a note"
+                                        context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="sale_drainage_line_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="display_type" column_invisible="1"/>
+                            <field name="product_id" required="not display_type"/>
+                            <field name="quantity" required="not display_type"/>
+                            <field name="uom_id" required="not display_type"/>
+                            <field name="product_uom_category_id" column_invisible="1"/>
+                            <field name="name"/>
+                            <field name="unit_price" widget="monetary" required="not display_type"/>
+                            <field name="total_price" widget="monetary"/>
+                            <field name="is_material"/>
+                        </list>
+                    </field>
+                     <group class="oe_subtotal_footer oe_right">
+
+                        <field name="drainage_margin_percentage"/>
+                        <field name="drainage_margin_amount" readonly="1"/>
+
+                        <field name="drainage_costing_amount"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                        <field name="sub_total_drainage_costing"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+
+<!--                    <group class="oe_subtotal_footer oe_right">-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="drainage_margin_percentage"/>-->
+<!--                            <div>-->
+<!--                                <field name="drainage_margin_percentage" class="oe_inline"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="drainage_costing_amount"/>-->
+<!--                            <div>-->
+<!--                                <field name="drainage_costing_amount" nolabel="1" readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="sub_total_drainage_costing"/>-->
+<!--                            <div>-->
+<!--                                <field name="sub_total_drainage_costing" nolabel="1" readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </group>-->
+                </page>
+
+                <page string="Civil Costing Details"
+                      invisible="civil_discipline_id not in project_discipline_ids">
+                    <field name="civil_costing_lines" widget="section_and_note_one2many"
+                           mode="list" context="{'default_display_type': False}"
+                           readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <control>
+                                <create name="add_product_control"
+                                        string="Add a line"/>
+                                <create name="add_section_control"
+                                        string="Add a section"
+                                        context="{'default_display_type': 'line_section'}"/>
+                                <create name="add_note_control"
+                                        string="Add a note"
+                                        context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="sale_civil_line_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="display_type" column_invisible="1"/>
+                            <field name="product_id" required="not display_type"/>
+                            <field name="quantity" required="not display_type"/>
+                            <field name="uom_id" required="not display_type"/>
+                            <field name="product_uom_category_id" column_invisible="1"/>
+                            <field name="name"/>
+                            <field name="unit_price" widget="monetary" required="not display_type"/>
+                            <field name="total_price" widget="monetary"/>
+                            <field name="is_material"/>
+                        </list>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right">
+
+                        <field name="civil_margin_percentage"/>
+                        <field name="civil_margin_amount" readonly="1"/>
+
+                        <field name="civil_costing_amount"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                        <field name="sub_total_civil_costing"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+
+                </page>
+
+                <page string="ELV Costing Details"
+                      invisible="elv_discipline_id not in project_discipline_ids">
+                    <field name="elv_costing_lines" widget="section_and_note_one2many"
+                           mode="list" context="{'default_display_type': False}"
+                           readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <control>
+                                <create name="add_product_control"
+                                        string="Add a line"/>
+                                <create name="add_section_control"
+                                        string="Add a section"
+                                        context="{'default_display_type': 'line_section'}"/>
+                                <create name="add_note_control"
+                                        string="Add a note"
+                                        context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="sale_elv_line_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="display_type" column_invisible="1"/>
+                            <field name="product_id" required="not display_type"/>
+                            <field name="quantity" required="not display_type"/>
+                            <field name="uom_id" required="not display_type"/>
+                            <field name="product_uom_category_id" column_invisible="1"/>
+                            <field name="name"/>
+                            <field name="unit_price" widget="monetary" required="not display_type"/>
+                            <field name="total_price" widget="monetary"/>
+                            <field name="is_material"/>
+                        </list>
+                    </field>
+                      <group class="oe_subtotal_footer oe_right">
+
+                        <field name="elv_margin_percentage"/>
+                        <field name="elv_margin_percentage_amount" readonly="1"/>
+
+                        <field name="elv_costing_amount"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                        <field name="sub_total_elv_costing"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+<!--                    <group class="oe_subtotal_footer oe_right">-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="elv_margin_percentage"/>-->
+<!--                            <div>-->
+<!--                                <field name="elv_margin_percentage" class="oe_inline"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="elv_costing_amount"/>-->
+<!--                            <div>-->
+<!--                                <field name="elv_costing_amount" nolabel="1" readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="sub_total_elv_costing"/>-->
+<!--                            <div>-->
+<!--                                <field name="sub_total_elv_costing" nolabel="1" readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </group>-->
+                </page>
+
+                <page string="MEP Costing Details"
+                      invisible="mep_discipline_id not in project_discipline_ids">
+                    <field name="mep_costing_lines" widget="section_and_note_one2many"
+                           mode="list" context="{'default_display_type': False}"
+                           readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <control>
+                                <create name="add_product_control"
+                                        string="Add a line"/>
+                                <create name="add_section_control"
+                                        string="Add a section"
+                                        context="{'default_display_type': 'line_section'}"/>
+                                <create name="add_note_control"
+                                        string="Add a note"
+                                        context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="sale_mep_line_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="display_type" column_invisible="1"/>
+                            <field name="product_id" required="not display_type"/>
+                            <field name="quantity" required="not display_type"/>
+                            <field name="uom_id" required="not display_type"/>
+                            <field name="product_uom_category_id" column_invisible="1"/>
+                            <field name="name"/>
+                            <field name="unit_price" widget="monetary" required="not display_type"/>
+                            <field name="total_price" widget="monetary"/>
+                            <field name="is_material"/>
+                        </list>
+                    </field>
+                     <group class="oe_subtotal_footer oe_right">
+
+                        <field name="mep_margin_percentage"/>
+                        <field name="mep_margin_percentage_amount" readonly="1"/>
+
+                        <field name="mep_costing_amount"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                        <field name="sub_total_mep_costing"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+
+
+
+<!--                    <group class="oe_subtotal_footer oe_right">-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="mep_margin_percentage"/>-->
+<!--                            <div>-->
+<!--                                <field name="mep_margin_percentage" class="oe_inline"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="mep_costing_amount"/>-->
+<!--                            <div>-->
+<!--                                <field name="mep_costing_amount" nolabel="1" readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="sub_total_mep_costing"/>-->
+<!--                            <div>-->
+<!--                                <field name="sub_total_mep_costing" nolabel="1" readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </group>-->
+                </page>
+
+                <page string="HVAC Costing Details"
+                      invisible="hvac_discipline_id not in project_discipline_ids">
+                    <field name="hvac_costing_lines" widget="section_and_note_one2many"
+                           mode="list" context="{'default_display_type': False}"
+                           readonly="state != 'draft'">
+                        <list editable="bottom">
+                            <control>
+                                <create name="add_product_control"
+                                        string="Add a line"/>
+                                <create name="add_section_control"
+                                        string="Add a section"
+                                        context="{'default_display_type': 'line_section'}"/>
+                                <create name="add_note_control"
+                                        string="Add a note"
+                                        context="{'default_display_type': 'line_note'}"/>
+                            </control>
+                            <field name="sale_hvac_line_id" column_invisible="1"/>
+                            <field name="currency_id" column_invisible="1"/>
+                            <field name="display_type" column_invisible="1"/>
+                            <field name="product_id" required="not display_type"/>
+                            <field name="quantity" required="not display_type"/>
+                            <field name="uom_id" required="not display_type"/>
+                            <field name="product_uom_category_id" column_invisible="1"/>
+                            <field name="name"/>
+                            <field name="unit_price" widget="monetary" required="not display_type"/>
+                            <field name="total_price" widget="monetary"/>
+                            <field name="is_material"/>
+                        </list>
+                    </field>
+                     <group class="oe_subtotal_footer oe_right">
+
+                        <field name="hvac_margin_percentage"/>
+                        <field name="hvac_margin_percentage_amount" readonly="1"/>
+
+                        <field name="hvac_costing_amount"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                        <field name="sub_total_hvac_costing"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"
+                               widget="monetary"
+                               options="{'currency_field': 'currency_id'}"/>
+
+                    </group>
+
+<!--                    <group class="oe_subtotal_footer oe_right">-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="hvac_margin_percentage"/>-->
+<!--                            <div>-->
+<!--                                <field name="hvac_margin_percentage" class="oe_inline"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="hvac_costing_amount"/>-->
+<!--                            <div>-->
+<!--                                <field name="hvac_costing_amount" nolabel="1" readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex float-end" colspan="2" groups="base.group_user">-->
+<!--                            <label for="sub_total_hvac_costing"/>-->
+<!--                            <div>-->
+<!--                                <field name="sub_total_hvac_costing" nolabel="1" readonly="1"-->
+<!--                                       class="oe_subtotal_footer_separator"-->
+<!--                                       widget="monetary"-->
+<!--                                       options="{'currency_field': 'currency_id'}"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </group>-->
+                </page>
+
+                <page string="Duct Measurement" invisible="is_hvac != True">
+                    <field name="measurement_line_ids">
+                        <list editable="bottom">
+                            <field name="line_id" column_invisible="1"/>
+                            <field name="items"/>
+                            <field name="width"/>
+                            <field name="depth"/>
+                            <field name="length"/>
+                            <field name="total_area"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Measurement">
+                    <field name="new_line_ids">
+                        <list editable="bottom">
+                            <field name="items_measurement"/>
+                            <field name="items_unit"/>
+                            <field name="length_measurement"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+
+            <!--            <xpath expr="//sheet" position="inside">-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 730px;">-->
+            <!--                    <label for="subtotal_amount_electric" string="Total Amount Electrical"-->
+            <!--                           invisible="is_electrical != True"/>-->
+            <!--                    <field name="subtotal_amount_electric" invisible="is_electrical != True"-->
+            <!--                           readonly="1"/>-->
+            <!--                    <label for="margin_percentage_electric" string="Margin Electric(%)"-->
+            <!--                           invisible="is_electrical != True"/>-->
+            <!--                    <field name="margin_percentage_electric" invisible="is_electrical != True"/>-->
+            <!--                    <br/>-->
+            <!--                    <label for="margin_amount_electric" string="Margin Amount Electric"-->
+            <!--                           invisible="is_electrical != True"/>-->
+            <!--                    <field name="margin_amount_electric" invisible="is_electrical != True"/>-->
+            <!--                </div>-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="total_with_margin_electric" string="Total With Margin Electric"-->
+            <!--                           invisible="is_electrical != True"/>-->
+            <!--                    <field name="total_with_margin_electric" invisible="is_electrical != True"/>-->
+            <!--                </div>-->
+            <!--                &lt;!&ndash;                ##########################################&ndash;&gt;-->
+            <!--                &lt;!&ndash;                <div class="oe_subtotal_footer oe_left" style="margin-left: 730px;">&ndash;&gt;-->
+            <!--                &lt;!&ndash;                    <label for="subtotal_amount_hvac" string="Total Amount"&ndash;&gt;-->
+            <!--                &lt;!&ndash;                           invisible="is_hvac != True"/>&ndash;&gt;-->
+            <!--                &lt;!&ndash;                    <field name="subtotal_amount_hvac" invisible="is_hvac != True"&ndash;&gt;-->
+            <!--                &lt;!&ndash;                           readonly="1"/>&ndash;&gt;-->
+            <!--                &lt;!&ndash;                </div>&ndash;&gt;-->
+            <!--                &lt;!&ndash;                <div class="oe_subtotal_footer oe_left" style="margin-left: 730px;">&ndash;&gt;-->
+            <!--                &lt;!&ndash;                    <label for="subtotal_amount_mep" string="Total Amount"&ndash;&gt;-->
+            <!--                &lt;!&ndash;                           invisible="is_mep != True"/>&ndash;&gt;-->
+            <!--                &lt;!&ndash;                    <field name="subtotal_amount_mep" invisible="is_mep != True"&ndash;&gt;-->
+            <!--                &lt;!&ndash;                           readonly="1"/>&ndash;&gt;-->
+            <!--                &lt;!&ndash;                </div>&ndash;&gt;-->
+            <!--                &lt;!&ndash;#################################################&ndash;&gt;-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="subtotal_amount_plumbing" string="Total Amount Plumbing"-->
+            <!--                           invisible="is_plumbing != True"/>-->
+            <!--                    <field name="subtotal_amount_plumbing" invisible="is_plumbing != True"-->
+            <!--                           readonly="1" options="{'currency_field': 'currency_id'}"/>-->
+            <!--                    <br/>-->
+            <!--                    <label for="margin_percentage_plumbing" string="Margin (%)"-->
+            <!--                           invisible="is_plumbing != True"/>-->
+            <!--                    <field name="margin_percentage_plumbing" invisible="is_plumbing != True"/>-->
+            <!--                    <br/>-->
+            <!--                    <label for="margin_amount_plumbing" string="Margin Amount Plumbing"-->
+            <!--                           invisible="is_plumbing  != True"/>-->
+            <!--                    <field name="margin_amount_plumbing" invisible="is_plumbing != True"/>-->
+            <!--                </div>-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="total_with_margin_plumbing" string="Total With Margin Plumbing"-->
+            <!--                           invisible="is_plumbing != True"/>-->
+            <!--                    <field name="total_with_margin_plumbing" invisible="is_plumbing != True"/>-->
+            <!--                </div>-->
+            <!--                &lt;!&ndash;########################################################&ndash;&gt;-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="subtotal_amount_water_supply" string="Total Amount Water"-->
+            <!--                           invisible="is_water_supply != True"/>-->
+            <!--                    <field name="subtotal_amount_water_supply" invisible="is_water_supply != True"-->
+            <!--                           readonly="1"/>-->
+
+            <!--                    <label for="margin_percentage_water" string="Margin (%)"-->
+            <!--                           invisible="is_water_supply != True"/>-->
+            <!--                    <field name="margin_percentage_water" invisible="is_water_supply != True"/>-->
+            <!--                    <br/>-->
+            <!--                    <label for="margin_amount_water" string="Margin Amount Water"-->
+            <!--                           invisible="is_water_supply != True"/>-->
+            <!--                    <field name="margin_amount_water" invisible="is_water_supply != True"/>-->
+            <!--                </div>-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="total_with_margin_water" string="Total With Margin Water"-->
+            <!--                           invisible="is_water_supply != True"/>-->
+            <!--                    <field name="total_with_margin_water" invisible="is_water_supply != True"/>-->
+            <!--                </div>-->
+            <!--                &lt;!&ndash;##################################################################&ndash;&gt;-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="subtotal_amount_mep" string="Total Amount Mep"-->
+            <!--                           invisible="is_mep != True"/>-->
+            <!--                    <field name="subtotal_amount_mep" invisible="is_mep != True"-->
+            <!--                           readonly="1"/>-->
+            <!--                    <br/>-->
+
+            <!--                    <label for="margin_percentage_mep" string="Margin (%)"-->
+            <!--                           invisible="is_mep != True"/>-->
+            <!--                    <field name="margin_percentage_mep" invisible="is_mep != True"/>-->
+            <!--                    <br/>-->
+            <!--                    <label for="margin_amount_mep" string="Margin Amount Mep"-->
+            <!--                           invisible="is_mep != True"/>-->
+            <!--                    <field name="margin_amount_mep" invisible="is_mep != True"/>-->
+            <!--                </div>-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="total_with_margin_mep" string="Total With Margin Mep"-->
+            <!--                           invisible="is_mep != True"/>-->
+            <!--                    <field name="total_with_margin_mep" invisible="is_mep != True"/>-->
+            <!--                </div>-->
+            <!--                &lt;!&ndash;##################################################################&ndash;&gt;-->
+
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="subtotal_amount_hvac" string="Total Amount Hvac"-->
+            <!--                           invisible="is_hvac != True"/>-->
+            <!--                    <field name="subtotal_amount_hvac" invisible="is_hvac != True"-->
+            <!--                           readonly="1"/>-->
+            <!--                    <br/>-->
+
+            <!--                    <label for="margin_percentage_hvac" string="Margin (%)"-->
+            <!--                           invisible="is_hvac != True"/>-->
+            <!--                    <field name="margin_percentage_hvac" invisible="is_hvac != True"/>-->
+            <!--                    <br/>-->
+            <!--                    <label for="margin_amount_hvac" string="Margin Amount Hvac"-->
+            <!--                           invisible="is_hvac != True"/>-->
+            <!--                    <field name="margin_amount_hvac" invisible="is_hvac != True"/>-->
+            <!--                </div>-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="total_with_margin_hvac" string="Total With Margin Hvac"-->
+            <!--                           invisible="is_hvac != True"/>-->
+            <!--                    <field name="total_with_margin_hvac" invisible="is_hvac != True"/>-->
+            <!--                </div>-->
+            <!--                &lt;!&ndash;######################################################&ndash;&gt;-->
+
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="subtotal_amount_drainage" string="Total Amount Drainage"-->
+            <!--                           invisible="is_drainage != True"/>-->
+            <!--                    <field name="subtotal_amount_drainage" invisible="is_drainage != True"-->
+            <!--                           readonly="1"/>-->
+            <!--                    <br/>-->
+
+            <!--                    <label for="margin_percentage_drainage" string="Margin (%)"-->
+            <!--                           invisible="is_drainage != True"/>-->
+            <!--                    <field name="margin_percentage_drainage" invisible="is_drainage != True"/>-->
+            <!--                    <br/>-->
+            <!--                    <label for="margin_amount_drainage" string="Margin Amount Drainage"-->
+            <!--                           invisible="is_drainage != True"/>-->
+            <!--                    <field name="margin_amount_drainage" invisible="is_drainage != True"/>-->
+            <!--                </div>-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="total_with_margin_drainage" string="Total With Margin Drainage"-->
+            <!--                           invisible="is_drainage != True"/>-->
+            <!--                    <field name="total_with_margin_drainage" invisible="is_drainage != True"/>-->
+            <!--                </div>-->
+            <!--                &lt;!&ndash;###########################################&ndash;&gt;-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="subtotal_amount_civil" string="Total Amount Civil"-->
+            <!--                           invisible="is_civil != True"/>-->
+            <!--                    <field name="subtotal_amount_civil" invisible="is_civil != True"-->
+            <!--                           readonly="1"/>-->
+            <!--                    <br/>-->
+
+            <!--                    <label for="margin_percentage_civil" string="Margin (%)"-->
+            <!--                           invisible="is_civil != True"/>-->
+            <!--                    <field name="margin_percentage_civil" invisible="is_civil != True"/>-->
+            <!--                    <br/>-->
+            <!--                    <label for="margin_amount_civil" string="Margin Amount Civil"-->
+            <!--                           invisible="is_civil != True"/>-->
+            <!--                    <field name="margin_amount_civil" invisible="is_civil != True"/>-->
+            <!--                </div>-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="total_with_margin_civil" string="Total With Margin Civil"-->
+            <!--                           invisible="is_civil != True"/>-->
+            <!--                    <field name="total_with_margin_civil" invisible="is_civil != True"/>-->
+            <!--                </div>-->
+            <!--                &lt;!&ndash;#######################################################&ndash;&gt;-->
+
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="subtotal_amount_elv" string="Total Amount Elv"-->
+            <!--                           invisible="is_elv != True"/>-->
+            <!--                    <field name="subtotal_amount_elv" invisible="is_elv != True"-->
+            <!--                           readonly="1"/>-->
+            <!--                    <br/>-->
+
+            <!--                    <label for="margin_percentage_elv" string="Margin (%)"-->
+            <!--                           invisible="is_elv != True"/>-->
+            <!--                    <field name="margin_percentage_elv" invisible="is_elv != True"/>-->
+            <!--                    <br/>-->
+            <!--                    <label for="margin_amount_elv" string="Margin Amount Elv"-->
+            <!--                           invisible="is_elv != True"/>-->
+            <!--                    <field name="margin_amount_elv" invisible="is_elv != True"/>-->
+            <!--                </div>-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="total_with_margin_elv" string="Total With Margin Elv"-->
+            <!--                           invisible="is_elv != True"/>-->
+            <!--                    <field name="total_with_margin_elv" invisible="is_elv != True"/>-->
+            <!--                </div>-->
+            <!--                &lt;!&ndash;##################################################################&ndash;&gt;-->
+
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="subtotal_amount_fire_fighting" string="Total Amount Fire Fighting"-->
+            <!--                           invisible="is_fire_fighting != True"/>-->
+            <!--                    <field name="subtotal_amount_fire_fighting" invisible="is_fire_fighting != True"-->
+            <!--                           readonly="1"/>-->
+            <!--                    <br/>-->
+
+            <!--                    <label for="margin_percentage_fire_fighting" string="Margin (%)"-->
+            <!--                           invisible="is_fire_fighting != True"/>-->
+            <!--                    <field name="margin_percentage_fire_fighting"-->
+            <!--                           invisible="is_fire_fighting != True"/>-->
+            <!--                    <br/>-->
+            <!--                    <label for="margin_amount_fire_fighting" string="Margin Amount Fire Fighting"-->
+            <!--                           invisible="is_fire_fighting != True"/>-->
+            <!--                    <field name="margin_amount_fire_fighting" invisible="is_fire_fighting != True"/>-->
+            <!--                </div>-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="total_with_margin_fire_fighting"-->
+            <!--                           string="Total With Margin Fire Fighting"-->
+            <!--                           invisible="is_fire_fighting != True"/>-->
+            <!--                    <field name="total_with_margin_fire_fighting"-->
+            <!--                           invisible="is_fire_fighting != True"/>-->
+            <!--                </div>-->
+            <!--                &lt;!&ndash;#############################################################&ndash;&gt;-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="subtotal_amount_fire_alarm" string="Total Amount Fire Alarm"-->
+            <!--                           invisible="is_fire_alarm != True"/>-->
+            <!--                    <field name="subtotal_amount_fire_alarm" invisible="is_fire_alarm != True"-->
+            <!--                           readonly="1"/>-->
+            <!--                    <br/>-->
+            <!--                    <label for="margin_percentage_fire_alarm" string="Margin (%)"-->
+            <!--                           invisible="is_fire_alarm != True"/>-->
+            <!--                    <field name="margin_percentage_fire_alarm" invisible="is_fire_alarm != True"/>-->
+            <!--                    <br/>-->
+            <!--                    <label for="margin_amount_fire_alarm" string="Margin Amount Fire Alarm"-->
+            <!--                           invisible="is_fire_alarm != True"/>-->
+            <!--                    <field name="margin_amount_fire_alarm" invisible="is_fire_alarm != True"/>-->
+            <!--                </div>-->
+            <!--                <div class="oe_subtotal_footer oe_left" style="margin-left: 700px;">-->
+            <!--                    <label for="total_with_margin_fire_alarm" string="Total With Margin Fire Alarm"-->
+            <!--                           invisible="is_fire_alarm != True"/>-->
+            <!--                    <field name="total_with_margin_fire_alarm" invisible="is_fire_alarm != True"/>-->
+            <!--                </div>-->
+            <!--            </xpath>-->
+            <xpath expr="//notebook/page[@name='customer_signature']" position="after">
+                <page string="Notes">
+                    <label for="note" string="Description"/>
+                    <field name="note"/>
+                </page>
+                <page string="Remarks">
+                    <label for="remark" string="Remarks"/>
+                    <field name="remark"/>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

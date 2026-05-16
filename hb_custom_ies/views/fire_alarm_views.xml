@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_fire_alarm_item_tree" model="ir.ui.view">
+        <field name="name">fire.alarm.item.tree</field>
+        <field name="model">fire.alarm.item</field>
+        <field name="arch" type="xml">
+            <list string="Fire Alarm Items">
+                <field name="fire_alarm_item_name"/>
+                <field name="fire_alarm_unit_rate"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_fire_alarm_item_form" model="ir.ui.view">
+        <field name="name">fire.alarm.item.form</field>
+        <field name="model">fire.alarm.item</field>
+        <field name="arch" type="xml">
+            <form string="Fire Alarm Item">
+                <sheet>
+                    <group>
+                        <field name="fire_alarm_item_name"/>
+                        <field name="fire_alarm_unit_rate"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_fire_alarm_items" model="ir.actions.act_window">
+        <field name="name">Fire Alarm Items</field>
+        <field name="res_model">fire.alarm.item</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_fire_alarm_root" name="Fire Alarm" parent="sale.menu_sale_config" action="action_fire_alarm_items" sequence="10"/>
+</odoo>

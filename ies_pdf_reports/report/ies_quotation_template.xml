@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="iesi_report_quotation">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="ies_pdf_reports.iesi_report_quotation_document"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="iesi_report_quotation_document">
+        <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+
+        <div class="header" style="font-family: Helvetica, sans-serif; padding: 0; margin: 0; width: 100%;">
+            <div style="width: 100% !important; position: absolute; left: 0; top: 0; margin: 0; padding: 0; z-index: -1;">
+                <img src="/ies_pdf_reports/static/src/images/header.jpg" style="width: 100%!important; margin: 0; padding: 0; display: block;"/>
+            </div>
+             <div style="position: fixed; top: 500px; left: 0; width: 100%; text-align: center; z-index: -1000; opacity: 0.08; pointer-events: none;">
+                <img t-if="o.company_id.background_image" t-att-src="image_data_uri(o.company_id.background_image)" style="width: 200px; height: auto;"/>
+            </div>
+            <div class="row m-0" style="padding-top: 165px; padding-left: 20px; padding-right: 20px; width: 100%; position: relative;">
+                <div class="col-12 text-end">
+                    <h2 style="color: #2c3e50; font-weight: bold; font-size: 24px; margin: 0; text-align: right;">QUOTATION</h2>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="article" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" style="font-size:15px; font-family: Helvetica, sans-serif; padding: 270px 20px 0px 20px;">
+            <div class="page">
+
+                <div class="row mb-2">
+                    <div class="col-7">
+                        <strong>M/s <span t-field="o.partner_id.name"/></strong><br/>
+                        <span t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True}'/>
+                    </div>
+                    <div class="col-5 text-end" style="text-align: right;">
+                        <strong>Date: </strong> <span t-field="o.date_order" t-options='{"widget": "date"}'/><br/>
+                        <strong>Ref: </strong> <span t-field="o.name"/>
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <strong>Subject: Quotation - <span t-field="o.project_name"/></strong><br/>
+                    <strong>Project: <span t-field="o.project_name"/></strong>
+                </div>
+
+                <p style="margin-bottom: 50px;">Dear Sir, We are thankful to you for giving us a chance to quote for MEP works.</p>
+
+                <table style="width:100%; border-collapse: collapse; border: 1px solid black;">
+                    <thead>
+                        <tr style="background-color: #BDD7EE; border: 1px solid black;">
+                            <th colspan="5" style="padding: 5px; border: 1px solid black; text-align: center;"><strong>Scope of Work &amp; Pricing:</strong></th>
+                        </tr>
+                        <tr style="background-color: #f2f2f2; border: 1px solid black;">
+                            <th style="border: 1px solid black; padding: 5px; width: 55%;" class="text-center">Scope Description</th>
+                            <th style="border: 1px solid black; padding: 5px; width: 8%;" class="text-center">Qty</th>
+                            <th style="border: 1px solid black; padding: 5px; width: 10%;" class="text-center">Unit</th>
+                            <th style="border: 1px solid black; padding: 5px; width: 12%;" class="text-center">Rate</th>
+                            <th style="border: 1px solid black; padding: 5px; width: 15%;" class="text-center">Price (OMR)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="line_count" t-value="0"/>
+                        <t t-foreach="o.order_line" t-as="line">
+                            <tr style="height: 25px;">
+                                <t t-if="line.display_type == 'line_section'">
+                                    <td style="border: 1px solid black; padding: 5px; font-weight: bold; text-decoration: underline; width: 55%;">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td style="border: 1px solid black; padding: 5px; width: 8%;"></td>
+                                    <td style="border: 1px solid black; padding: 5px; width: 10%;"></td>
+                                    <td style="border: 1px solid black; padding: 5px; width: 12%;"></td>
+                                    <td style="border: 1px solid black; padding: 5px; width: 15%;"></td>
+                                </t>
+                                <t t-if="not line.display_type">
+                                    <td style="border: 1px solid black; padding: 5px;"><span t-field="line.name"/></td>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: center;"><span t-esc="int(line.product_uom_qty)"/></td>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: center;"><span t-field="line.product_uom"/></td>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: right;"><span t-field="line.price_unit"/></td>
+                                    <td style="border: 1px solid black; padding: 5px; text-align: right;"><span t-field="line.price_subtotal"/></td>
+                                </t>
+                                <t t-set="line_count" t-value="line_count + 1"/>
+                            </tr>
+                        </t>
+                        <t t-foreach="range(max(0, 10 - line_count))" t-as="i">
+                            <tr style="height: 25px;">
+                                <td colspan="5" style="border: 1px solid black;">&#160;</td>
+                            </tr>
+                        </t>
+                        <tr>
+                            <td colspan="4" style="border: 1px solid black; text-align: right; padding: 5px;"><strong>Sub Total</strong></td>
+                            <td style="border: 1px solid black; text-align: right; padding: 5px;"><span t-field="o.amount_untaxed"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="border: 1px solid black; text-align: right; padding: 5px;"><strong>Vat (5%)</strong></td>
+                            <td style="border: 1px solid black; text-align: right; padding: 5px;"><span t-field="o.amount_tax"/></td>
+                        </tr>
+                        <tr style="background-color: #f2f2f2;">
+                            <td colspan="4" style="border: 1px solid black; text-align: right; padding: 5px;"><strong>Grand Total</strong></td>
+                            <td style="border: 1px solid black; text-align: right; padding: 5px;"><strong><span t-field="o.amount_total"/></strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+             <div class="mt-1">
+                 <!-- Split amount -->
+                 <t t-set="riyals" t-value="int(o.amount_total)"/>
+                 <t t-set="baisa" t-value="int(round((o.amount_total - riyals) * 1000))"/>
+
+                 <!-- Convert number to words and clean currency text -->
+                 <t t-set="riyal_words"
+                    t-value="o.currency_id.amount_to_text(riyals)
+            .replace('Omani Riyals', '')
+            .replace('Omani Rial', '')
+            .replace('Rial Omani', '')
+            .replace('Rials', '')
+            .replace('Rial', '')
+            .strip()"/>
+
+                 <strong>
+                     In Words:
+                     <span style="text-transform: capitalize;">
+                         Omani Riyals
+                         <t t-esc="riyal_words"/>
+                         and Baiza <t t-esc="baisa"/>/1000 Only
+                     </span>
+                 </strong>
+             </div>
+                <div style="page-break-before: always;"/>
+                <div t-if="o.boq_remarks" style="margin-top: 0px;padding-top:280px">
+                    <div t-field="o.boq_remarks" style="margin-top: 0px;"/>
+                </div>
+                <div class="row" style="margin-top: 20px; page-break-inside: avoid;">
+                    <div class="col-6">
+                        <p style="margin:0;">Yours faithfully,</p>
+                        <p style="margin:0;">For <strong>Innovative Engineering Services International LLC</strong></p>
+                        <br/><br/>
+                        <strong>Muhammed Nakash</strong><br/>
+                        Managing Partner
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer" style="width: 100%; position: relative;margin-top: -15px;">
+
+            <div style="position: absolute; right: 10px; bottom: 10px; font-size: 10px;">
+                Page
+                <span class="page"/>
+                /
+                <span class="topage"/>
+            </div>
+
+            <img src="/ies_pdf_reports/static/src/images/footer.jpg"
+                 style="width: 100%; display: block;"/>
+
+        </div>
+    </template>
+</odoo>

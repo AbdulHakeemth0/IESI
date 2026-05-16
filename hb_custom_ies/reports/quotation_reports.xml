@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="af_quotation_pdf">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <head>
+                        <meta charset="UTF-8"/>
+                    </head>
+
+                    <div class="header"
+                         style="display: flex; justify-content: space-between; position: relative;font-family:Times New Roman;Times, serif;">
+                        <div class="row" style="fonts:Times New Roman;Times, serif;">
+                            <div class="col-4"
+                                 style="overflow:auto;font-family: 'Times New Roman', Times, serif; font-size: 11pt;padding-left:95px; padding-top:25px;">
+                                <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)"
+                                     style="height:110px; width:auto;"/>
+                            </div>
+                            <div class="col-4" style="text-align:left;padding-top:80px;">
+                                <h1 style="color:#315b44; font-size:35px; font-weight:800; margin:0;">
+                                    QUOTATION
+                                </h1>
+                            </div>
+                            <div class="col-4"
+                                 style="overflow:auto;align-items: flex-start; font-family: 'Times New Roman', Times, serif; font-size: 11pt;">
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <hr style="margin:10px 0; border-top:1px solid #ccc;"/>
+                    <div class="content">
+                        <h4 style="font-weight:700; margin:0;font-size:12pt;">Billed to:</h4>
+                        <table style="width:100%; margin-top:15px; font-size:10pt;">
+                            <tr>
+                                <!-- LEFT COLUMN -->
+                                <td style="width:60%; vertical-align:top;">
+                                    <span t-esc="o.partner_id.name"/>
+                                    <br/>
+                                    <span t-esc="o.partner_id.phone"/>
+                                    <br/>
+                                    <span t-esc="o.partner_id.street"/>,
+                                    <span t-esc="o.partner_id.city"/>
+                                    <br/>
+                                    <span t-esc="o.partner_id.country_id.name"/>
+                                </td>
+
+                                <!-- RIGHT COLUMN -->
+                                <td style="width:40%; text-align:right; vertical-align:top;">
+                                    <span style="color:#555;">Date:</span>
+                                    <span t-esc="o.date_order.strftime('%d %B %Y')"/>
+                                    <br/>
+
+                                    <!--                                    <span style="color:#555;">Valid Until:</span>-->
+                                    <!--                                    <span t-esc="(o.validity_date or '').strftime('%d %B %Y') if o.validity_date else ''"/>-->
+                                    <!--                                    <br/>-->
+
+                                    <span style="color:#555; font-weight:600;">Ref No:</span>
+                                    <span style="font-weight:700;" t-esc="o.name"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!--                        <hr style="margin:8px 0; border-top:1px solid #ccc;"/>-->
+
+                        <!--                        &lt;!&ndash; ===================== CUSTOMER DETAILS ===================== &ndash;&gt;-->
+                        <table style="width:100%; margin-top:20px; font-size:11pt; border-collapse:collapse;">
+
+                            <!-- ROW 1 : Subject -->
+                            <tr>
+                                <td style="width:15%;">
+                                    <strong>Subject:</strong>
+                                </td>
+                                <td style="width:85%;">
+                                    <span t-field="o.scope_work"/>
+                                </td>
+                            </tr>
+
+                            <!-- ROW 2 : Project -->
+                            <tr>
+                                <td style="width:15%;">
+                                    <strong>Project:</strong>
+                                </td>
+                                <td style="width:85%;">
+                                    <span t-field="o.project_name"/>
+                                </td>
+                            </tr>
+
+                        </table>
+                        <!-- Text content -->
+                        <p style="margin-top:15px; font-size:11pt;">
+                            Dear Sir,
+                        </p>
+
+                        <p style="font-size:11pt; text-align:justify;">
+                            We are indeed thankful to you for giving us a chance to quote for the
+                            MEP &amp; AC works for <strong>Majestic Café at Madinat Al Qaboos</strong>.
+                            Based on the query, we are pleased to offer our quote as below.
+                        </p>
+
+
+                        <t t-set="chunk_size" t-value="10"/>
+                        <t t-set="order_lines" t-value="o.order_line"/>
+                        <t t-set="pages"
+                           t-value="[order_lines[i:i+chunk_size] for i in range(0, len(order_lines), chunk_size)]"/>
+
+                        <!-- ===================== MAIN TABLE ===================== -->
+                        <t t-set="sl_no" t-value="1"/>
+                        <t t-foreach="pages" t-as="page">
+                            <t t-set="currency" t-value="o.currency_id or o.company_id.currency_id"/>
+                            <!--                            <table style="border:1px solid #000;width:100%; border-collapse:collapse; font-size:10pt; margin-top:15px; height:550px;">-->
+
+                            <!--                                <thead>-->
+                            <!--                                    <tr style="border:1px solid #000;">-->
+                            <!--                                        &lt;!&ndash;                                        <th style="border:1px solid #000; padding:6px; width:5%;">Sr</th>&ndash;&gt;-->
+                            <!--                                        <th style="border:1px solid #000; padding:6px; width:45%;">Scope Description-->
+                            <!--                                        </th>-->
+                            <!--                                        <th style="border:1px solid #000; padding:6px; width:10%;">Unit</th>-->
+                            <!--                                        <th style="border:1px solid #000; padding:6px; width:10%;">Qty</th>-->
+                            <!--                                        <th style="border:1px solid #000; padding:6px; width:15%;">Rate</th>-->
+                            <!--                                        <th style="border:1px solid #000; padding:6px; width:15%;">Amount</th>-->
+                            <!--                                    </tr>-->
+                            <!--                                </thead>-->
+                            <!--                                <tbody>-->
+
+                            <!--                                    &lt;!&ndash; Real rows &ndash;&gt;-->
+
+                            <!--                                    <t t-foreach="page" t-as="line">-->
+                            <!--                                        <tr style="height:25px;">-->
+                            <!--                                            <td style="border-left:1px solid #000; border-right:1px solid #000;">-->
+                            <!--                                                <t t-esc="line.name"/>-->
+                            <!--                                            </td>-->
+                            <!--                                            <t t-if="line.product_id">-->
+                            <!--                                                <td style="border-left:1px solid #000; border-right:1px solid #000; text-align:center;">-->
+                            <!--                                                    <t t-esc="line.unit or '-'"/>-->
+                            <!--                                                </td>-->
+                            <!--                                                <td style="border-left:1px solid #000; border-right:1px solid #000; text-align:right;">-->
+                            <!--                                                    <t t-esc="line.product_uom_qty"/>-->
+                            <!--                                                </td>-->
+                            <!--                                                <td style="border-left:1px solid #000; border-right:1px solid #000; text-align:right;">-->
+                            <!--                                                    <t t-esc="'%.2f' % line.price_unit"/>-->
+                            <!--                                                </td>-->
+                            <!--                                                <td style="border-left:1px solid #000; border-right:1px solid #000; text-align:right;">-->
+                            <!--                                                    <t t-esc="'%.2f' % line.price_subtotal"/>-->
+                            <!--                                                </td>-->
+                            <!--                                            </t>-->
+                            <!--                                            <t t-else="">-->
+                            <!--                                                <td style="border-left:1px solid #000; border-right:1px solid #000;"></td>-->
+                            <!--                                                <td style="border-left:1px solid #000; border-right:1px solid #000;"></td>-->
+                            <!--                                                <td style="border-left:1px solid #000; border-right:1px solid #000;"></td>-->
+                            <!--                                                <td style="border-left:1px solid #000; border-right:1px solid #000;"></td>-->
+                            <!--                                            </t>-->
+                            <!--                                        </tr>-->
+                            <!--                                        <t t-set="sl_no" t-value="sl_no + 1"/>-->
+                            <!--                                    </t>-->
+
+                            <!--                                    &lt;!&ndash; Blank rows &ndash;&gt;-->
+                            <!--                                    <t t-set="blank_rows" t-value="chunk_size - len(page)"/>-->
+                            <!--                                    <t t-foreach="range(blank_rows)" t-as="i">-->
+                            <!--                                        <tr style="height:25px;">-->
+                            <!--                                            <td style="border-left:1px solid #000; border-right:1px solid #000;"></td>-->
+                            <!--                                            <td style="border-left:1px solid #000; border-right:1px solid #000;"></td>-->
+                            <!--                                            <td style="border-left:1px solid #000; border-right:1px solid #000;"></td>-->
+                            <!--                                            <td style="border-left:1px solid #000; border-right:1px solid #000;"></td>-->
+                            <!--                                            <td style="border-left:1px solid #000; border-right:1px solid #000;"></td>-->
+                            <!--                                            &lt;!&ndash;                                            <td style="border-left:1px solid #000; border-right:1px solid #000;"></td>&ndash;&gt;-->
+                            <!--                                        </tr>-->
+                            <!--                                    </t>-->
+                            <!--                                </tbody>-->
+                            <!--                            </table>-->
+
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid black; font-size: 12px;">
+                                <thead>
+                                    <tr style="background-color: #90D5FF; color: black;"> <!-- light green background -->
+                                        <th style="border: 1px solid black; padding: 6px; width:50%;">Scope
+                                            Description
+                                        </th>
+                                        <th style="border: 1px solid black; padding: 6px; width:10%;">Unit</th>
+                                        <th style="border: 1px solid black; padding: 6px; width:10%;">Quantity</th>
+                                        <th style="border: 1px solid black; padding: 6px; width:15%;">Rate</th>
+                                        <th style="border: 1px solid black; padding: 6px; width:15%;">Amount(<t
+                                                t-esc="o.currency_id.name"/>)
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="order_lines" t-as="line">
+                                        <tr style="height:25px;">
+                                            <td style="border: 1px solid black; padding: 6px;">
+                                                <t t-esc="line.name"/>
+                                            </td>
+                                            <t t-if="line.product_id">
+                                                <td style="border: 1px solid black; padding: 6px;">
+                                                    <t t-esc="line.unit or '-'"/>
+                                                </td>
+                                                <td style="border: 1px solid black; padding: 6px;">
+                                                    <t t-esc="line.product_uom_qty"/>
+                                                </td>
+                                                <td style="border: 1px solid black; padding: 6px;">
+                                                    <t t-esc="'%.2f' % line.price_unit"/>
+                                                </td>
+                                                <td style="border: 1px solid black; padding: 6px;">
+                                                    <!--                                                    <t t-esc="'%.2f' % line.price_subtotal"/>-->
+                                                    <span t-esc="line.price_subtotal"
+                                                          t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                                </td>
+                                            </t>
+                                            <t t-else="">
+
+                                                <td style="border: 1px solid black; padding: 6px;"></td>
+                                                <td style="border: 1px solid black; padding: 6px;"></td>
+                                                <td style="border: 1px solid black; padding: 6px;"></td>
+                                                <td style="border: 1px solid black; padding: 6px;"></td>
+                                            </t>
+                                        </tr>
+                                        <t t-set="sl_no" t-value="sl_no + 1"/>
+                                    </t>
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 6px; text-align: right;">
+                                            <b>Sub-Total</b>
+                                        </td>
+                                        <td style="border: 1px solid black; padding: 6px;"></td>
+                                        <td style="border: 1px solid black; padding: 6px;"></td>
+                                        <td style="border: 1px solid black; padding: 6px;"></td>
+                                        <td style="border: 1px solid black; padding: 6px;">
+                                            <span t-esc="o.amount_untaxed"
+                                                  t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 6px; text-align: right;">
+                                            <b>VAT (5%)</b>
+                                        </td>
+                                        <td style="border: 1px solid black; padding: 6px;"></td>
+                                        <td style="border: 1px solid black; padding: 6px;"></td>
+                                        <td style="border: 1px solid black; padding: 6px;"></td>
+                                        <td style="border: 1px solid black; padding: 6px;">
+                                            <span t-esc="o.amount_tax"
+                                                  t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td style="border: 1px solid black; padding: 6px; text-align: right;">
+                                            <b>Grand Total</b>
+                                        </td>
+                                        <td style="border: 1px solid black; padding: 6px;"></td>
+                                        <td style="border: 1px solid black; padding: 6px;"></td>
+                                        <td style="border: 1px solid black; padding: 6px;"></td>
+                                        <td style="border: 1px solid black; padding: 6px;">
+                                            <span t-esc="o.amount_total"
+                                                  t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="5" style="border: 1px solid black; padding: 6px;">
+                                            <b>Amount in Words:</b>
+                                            <span t-esc="o.currency_id.amount_to_text(o.amount_total).upper() + ' ' + o.currency_id.name.upper() + ' ONLY'"/>
+                                        </td>
+
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="margin-top: 20px; font-size: 12px; line-height: 1.6;">
+
+                                <b style="font-size: 13px;">Assumptions &amp; Considerations</b>
+
+                                <ol style="margin: 8px 0 0 18px; padding: 0;">
+                                    <li>We have considered GI tray and trunking for the electrical &amp; data works.
+                                    </li>
+                                    <li>Ducted type DX AC units will be supplied by the client.</li>
+                                    <li>Ducts considered for AC works are PI ducts.</li>
+                                    <li>Main electrical source and its cabling shall be arranged by the client.</li>
+                                    <li>DB components shall be from Schneider / ABB.</li>
+                                    <li>FOH switches and sockets shall be of SS / Chrome finish.</li>
+                                    <li>All BOH switches, sockets and isolators shall be from Schneider / Legrand.</li>
+                                    <li>MEP provisions are considered only for a normal café. Provision and pricing
+                                        shall be revised based on the final kitchen equipment layout and schedules.
+                                    </li>
+                                </ol>
+
+                            </div>
+                            <div style="margin-top: 20px; font-size: 12px; line-height: 1.6;">
+
+                                <b style="text-decoration: underline;">Exclusions:</b>
+                                <ol style="margin: 8px 0 0 18px; padding: 0;">
+                                    <li>Treated fresh air handling unit.</li>
+                                    <li>Kitchen hood design, kitchen hood, kitchen hood ventilation fan and ducting.
+                                    </li>
+                                    <li>Supply of AC units.</li>
+                                    <li>Any civil works and core cutting.</li>
+                                    <li>Annual maintenance contract.</li>
+                                    <li>Third party inspections, reports and commissioning.</li>
+                                    <li>Authority approvals and fees for authority inspections.</li>
+                                    <li>Any other services or scope mentioned in the scope description.</li>
+                                    <li>Temporary electrical power and water for the works.</li>
+                                    <li>Restroom, drinking water and washrooms for the workers.</li>
+                                    <li>Lighting control wiring and light control system.</li>
+                                    <li>Main electrical cable from NAMA feeder and its installation. If required,
+                                        cabling and laying shall be done at a rate of OMR 50/- per metre.
+                                    </li>
+                                    <li>Any data, WiFi, CCTV, fire alarm and fire fighting related works.</li>
+                                </ol>
+
+                                <br/>
+
+                                <b style="text-decoration: underline;">Payment Terms:</b>
+                                <ul style="margin: 8px 0 0 18px; padding: 0;">
+                                    <li>50% advance.</li>
+                                    <li>30% on completion of above ceiling &amp; below floor works.</li>
+                                    <li>10% on completion of final fixtures.</li>
+                                    <li>10% on completion of testing &amp; commissioning.</li>
+                                </ul>
+
+                                <br/>
+
+                                <b style="text-decoration: underline;">Duration Considered:</b>
+                                <p style="margin: 6px 0 0 0;">
+                                    To be discussed and agreed as per site condition.
+                                    <br/>
+                                    Quote Validity:
+                                    <b>15 Days</b>
+                                </p>
+                                <br/>
+                                <p style="margin-top: 10px; text-align: justify;">
+                                    We hope we have correctly interpreted your requirements and that our offer is of
+                                    interest.
+                                    We once again thank you for inviting us and look forward to receiving your valuable
+                                    work order.
+                                    In the meantime, should you require further information or discussion, please feel
+                                    free to
+                                    contact the undersigned.
+                                </p>
+                            </div>
+                        </t>
+                    </div>
+                    <div class="footer">
+                        <div style="width: 100%; text-align: center; font-size: 11px; color: #003366; padding-top: 8px;">
+                            Innovative Engineering Services International LLC |
+                            CR No: 1406261 |
+                            Post Box No: 3085 |
+                            Postal Code: 130 |
+                            Sultanate of Oman
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

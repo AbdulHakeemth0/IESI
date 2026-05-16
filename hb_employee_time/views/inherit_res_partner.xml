@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+     <record id="view_partner_form_inherit_cr_no" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vat']" position="after">
+                <field name="cr_no"/>
+            </xpath>
+            <xpath expr="//field[@name='vat']" position="attributes">
+            <attribute name="string">VAT Number</attribute>
+        </xpath>
+
+        </field>
+    </record>
+
+<!--    <record id="crm_lead_address_form" model="ir.ui.view">-->
+<!--        <field name="name">crm.lead.address.form</field>-->
+<!--        <field name="model">crm.lead</field>-->
+<!--        <field name="inherit_id" ref="crm.crm_lead_view_form"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//group" position="inside">-->
+<!--                <group string="Customer Address">-->
+<!--                    <field name="street"/>-->
+<!--                    <field name="street2"/>-->
+<!--                    <field name="city"/>-->
+<!--                    <field name="state_id"/>-->
+<!--                    <field name="zip"/>-->
+<!--                    <field name="country_id"/>-->
+<!--                </group>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+</odoo>

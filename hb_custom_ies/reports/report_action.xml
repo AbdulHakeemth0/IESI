@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="paperformat_for_report" model="report.paperformat">
+            <field name="name">Custom Paperformat for the SO report</field>
+            <field name="default" eval="False"/>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">30</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_spacing">40</field>
+            <field name="dpi">96</field>
+        </record>
+<!--        <record id="paperformat_for_boq_report" model="report.paperformat">-->
+<!--            <field name="name">Custom Paperformat for the BOQ report</field>-->
+<!--            <field name="default" eval="False"/>-->
+<!--            <field name="disable_shrinking" eval="True"/>-->
+<!--            <field name="format">A4</field>-->
+<!--            <field name="orientation">Portrait</field>-->
+<!--            <field name="margin_top">70</field>-->
+<!--            <field name="margin_bottom">30</field>-->
+<!--            <field name="margin_left">5</field>-->
+<!--            <field name="margin_right">5</field>-->
+<!--            <field name="header_spacing">60</field>-->
+<!--            <field name="dpi">96</field>-->
+<!--        </record>-->
+<!--        <record id="paperformat_for_ireport" model="report.paperformat">-->
+<!--            <field name="name">Custom Paperformat for the invoice report</field>-->
+<!--            <field name="default" eval="False"/>-->
+<!--            <field name="disable_shrinking" eval="True"/>-->
+<!--            <field name="format">A4</field>-->
+<!--            <field name="orientation">Portrait</field>-->
+<!--            <field name="margin_top">40</field>-->
+<!--            <field name="margin_bottom">50</field>-->
+<!--            <field name="margin_left">5</field>-->
+<!--            <field name="margin_right">5</field>-->
+<!--            <field name="header_spacing">40</field>-->
+<!--            <field name="dpi">96</field>-->
+<!--        </record>-->
+        <record id="action_quotation_pdf" model="ir.actions.report">
+            <field name="name">QUOTATION</field>
+            <field name="model">sale.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">hb_custom_ies.af_quotation_pdf</field>
+            <field name="report_file">hb_custom_ies.af_quotation_pdf</field>
+            <field name="binding_model_id" ref="sale.model_sale_order"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="paperformat_for_report"/>
+            <field name="print_report_name">
+                '%s-%s' % (object.name, object.partner_id.name.replace('_', ''))
+            </field>
+        </record>
+
+<!--        <record id="action_boq_pdf" model="ir.actions.report">-->
+<!--            <field name="name">BOQ REPORT</field>-->
+<!--            <field name="model">sale.order</field>-->
+<!--            <field name="report_type">qweb-pdf</field>-->
+<!--            <field name="report_name">af_custom_reports.af_report_boq_pdf</field>-->
+<!--            <field name="report_file">af_custom_reports.af_report_boq_pdf</field>-->
+<!--            <field name="binding_model_id" ref="sale.model_sale_order"/>-->
+<!--            <field name="binding_type">report</field>-->
+<!--            <field name="paperformat_id" ref="paperformat_for_boq_report"/>-->
+<!--            <field name="print_report_name">-->
+<!--                '%s-%s' % (object.name, object.partner_id.name.replace('/', '_'))-->
+<!--            </field>-->
+<!--        </record>-->
+<!--        <record id="action_invoice_pdf" model="ir.actions.report">-->
+<!--            <field name="name">INVOICE REPORT</field>-->
+<!--            <field name="model">account.move</field>-->
+<!--            <field name="report_type">qweb-pdf</field>-->
+<!--            <field name="report_name">af_custom_reports.af_invoice_pdf</field>-->
+<!--            <field name="report_file">af_custom_reports.af_invoice_pdf</field>-->
+<!--            <field name="binding_model_id" ref="sale.model_account_move"/>-->
+<!--            <field name="binding_type">report</field>-->
+<!--            <field name="paperformat_id" ref="paperformat_for_ireport"/>-->
+<!--            <field name="print_report_name">-->
+<!--                '%s' % (object.name)-->
+<!--            </field>-->
+<!--        </record>-->
+    </data>
+</odoo>

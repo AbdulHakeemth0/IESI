@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="iesi_report_purchaseorder_document">
+        <t t-set="o" t-value="o.with_context(lang=o.partner_id.lang)"/>
+
+        <!-- 2. FIXED HEADER -->
+        <div class="header" style="font-family: Helvetica, sans-serif;padding: 0; margin: 0;width:100%;">
+          <!-- 1. WATERMARK -->
+        <div style="position: fixed; top: 700px; left: 0; width: 100%; text-align: center; z-index: -1000; opacity: 0.1;">
+
+            <img t-if="o.company_id.background_image"
+         t-att-src="image_data_uri(o.company_id.background_image)"
+         style="width: 200px; height: auto; display: block; margin: 0 auto;"/>
+       </div>
+
+                <div style="width: 100% !important; position: absolute; left: 0; top: 0; margin: 0; padding: 0;z-index: -1;">
+
+                    <img src="/ies_pdf_reports/static/src/images/header.jpg" style="width: 100%!important;margin: 0; padding: 0; display: block;"/>
+                </div>
+
+            <div class="row m-0" style="padding-top: 165px; padding-left: 20px; padding-right: 20px; width: 100%;position: relative;">
+                <div class="col-12 text-end">
+                    <!-- title -->
+                    <h2 style="color: #2c3e50; font-weight: bold; font-size: 24px; margin: 0;">PURCHASE ORDER</h2>
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- 3. MAIN CONTENT -->
+        <div class="article" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id" style="font-size:11px; font-family: Helvetica, sans-serif;padding: 210px 20px 0px 20px;">
+            <div class="page">
+                <div class="row mb-4" style="margin-top: 10px;">
+                    <div class="col-6">
+                        <div style="background-color: #f8f9fa; padding: 8px; font-weight: bold; border-bottom: 1px solid #dee2e6;">Buyer:</div>
+                        <div style="padding: 8px; min-height: 120px;">
+                            <strong t-esc="o.company_id.name"/><br/>
+                            <span t-field="o.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True}'/>
+                            <!-- Added CR NO here -->
+                            <t t-if="o.company_id.cr_no">
+                                CR NO: <t t-esc="o.company_id.cr_no"/>
+                            </t>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div style="background-color: #f8f9fa; padding: 8px; font-weight: bold; border-bottom: 1px solid #dee2e6;">Vendor:</div>
+                        <div style="padding: 8px; min-height: 120px;">
+                            <strong t-esc="o.partner_id.name"/><br/>
+                            <span t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone", "email"], "no_marker": True}'/>
+                            <t t-if="o.partner_id.cr_no">CR NO: <t t-esc="o.partner_id.cr_no"/></t>
+                        </div>
+                    </div>
+                </div>
+
+
+                 <!-- Updated Information Table -->
+                <table class="table table-bordered mb-4" style="width:100%; border-collapse: collapse; border: 1px solid #dee2e6;">
+                <tr style="background-color: #f8f9fa;">
+                    <td style="padding: 8px;"><strong>Project</strong></td>
+                    <td style="padding: 8px;" colspan="2"><span t-field="o.project_id"/></td>
+                    <td style="padding: 8px;"><strong>Scope</strong></td>
+                    <td style="padding: 8px;" colspan="2"><span t-field="o.scope"/></td>
+                </tr>
+                <!-- Row 2 -->
+                <tr>
+                     <td style="padding: 8px;"><strong>PO Number</strong></td>
+                    <td style="padding: 8px;" colspan="2"><span t-field="o.name"/></td>
+                    <td style="padding: 8px;"><strong>Quote Ref</strong></td>
+                    <td style="padding: 8px;" colspan="2"><span t-field="o.partner_ref"/></td>
+
+                </tr>
+                    <tr>
+                        <td style="padding: 8px;"><strong>Mode of Payment</strong></td>
+                    <td style="padding: 8px;" colspan="2"><span t-field="o.mode_ids"/></td>
+                    <td style="padding: 8px;"><strong>Payment Terms</strong></td>
+                    <td style="padding: 8px;" colspan="2"><span t-field="o.payment_terms"/></td>
+                    </tr>
+                <!-- Row 4 -->
+                <tr style="background-color: #f8f9fa;">
+                    <td style="padding: 8px;"><strong>PO Date</strong></td>
+                    <td style="padding: 8px;"><span t-esc="o.date_order.strftime('%d-%m-%Y') if o.date_order else ''"/></td>
+                    <td style="padding: 8px;">
+                        <strong>Delivery On</strong>
+                    </td>
+                    <td style="padding: 8px;">
+                        <span t-esc="o.date_planned.strftime('%d-%m-%Y') if o.date_planned else ''"/>
+                    </td>
+                    <td style="padding: 8px;">
+                        <strong>Quote Date</strong>
+                    </td>
+                    <td style="padding: 8px;">
+                        <span t-esc="o.quote_date.strftime('%d-%m-%Y') if o.quote_date else ''"/>
+                    </td>
+                </tr>
+
+
+                </table>
+
+
+
+                <!-- 10 LINE PAGINATION LOGIC -->
+                <t t-set="chunk_size" t-value="10"/>
+                <t t-set="order_lines" t-value="o.order_line"/>
+                <t t-set="pages" t-value="[order_lines[i:i+chunk_size] for i in range(0, len(order_lines), chunk_size)]"/>
+
+                <t t-set="sl_no" t-value="1"/>
+                <t t-foreach="pages" t-as="page">
+                    <table style="border: 1px solid #000!important; width:100%; border-collapse: separate !important; border-spacing: 0 !important; margin-top: 5px;">
+                        <thead style="background-color: #f8f9fa;">
+                            <tr>
+                                <th style="border-left:1px solid #000; border-right:1px solid #000;border-bottom: 1px solid #000; padding: 8px; width: 5%;" class="text-center">SR</th>
+                                <th style="border-left:1px solid #000; border-right:1px solid #000;border-bottom: 1px solid #000; padding: 8px; width: 45%;" class="text-start">MATERIAL DESCRIPTION</th>
+                                <th style="border-left:1px solid #000; border-right:1px solid #000;border-bottom: 1px solid #000; padding: 8px; width: 10%;" class="text-center">QUANTITY</th>
+                                <th style="border-left:1px solid #000; border-right:1px solid #000;border-bottom: 1px solid #000; padding: 8px; width: 10%;" class="text-center">UNIT</th>
+                                <th style="border-left:1px solid #000; border-right:1px solid #000;border-bottom: 1px solid #000; padding: 8px; width: 15%;" class="text-end">RATE</th>
+                                <th style="border-left:1px solid #000; border-right:1px solid #000;border-bottom: 1px solid #000; padding: 8px; width: 15%;" class="text-end">AMOUNT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="page" t-as="line">
+                                <tr style="height: 30px;">
+                                    <t t-if="not line.display_type">
+                                        <td style="border-left:1px solid #000; border-right:1px solid #000;border-top: 0 !important; border-bottom: 0 !important; text-align: center;"><t t-esc="sl_no"/></td>
+                                        <td style="border-left:1px solid #000; border-right:1px solid #000;border-top: 0 !important; border-bottom: 0 !important; padding-left: 5px;"><span t-field="line.name"/></td>
+                                        <td style="border-left:1px solid #000; border-right:1px solid #000;border-top: 0 !important; border-bottom: 0 !important; text-align: center;"><span t-esc="int(line.product_qty)"/></td>
+                                        <td style="border-left:1px solid #000; border-right:1px solid #000;border-top: 0 !important; border-bottom: 0 !important; text-align: center;"><span t-field="line.product_uom"/></td>
+                                        <td style="border-left:1px solid #000; border-right:1px solid #000;border-top: 0 !important; border-bottom: 0 !important; text-align: right; padding-right: 5px;">
+                                            <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                        <td style="border-left:1px solid #000; border-right:1px solid #000;border-top: 0 !important; border-bottom: 0 !important; text-align: right; padding-right: 5px;">
+                                            <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                        <t t-set="sl_no" t-value="sl_no + 1"/>
+                                    </t>
+                                    <t t-else="">
+                                        <td colspan="6" style=""><span t-field="line.name"/></td>
+                                    </t>
+                                </tr>
+                            </t>
+                            <!-- blank rows -->
+                            <t t-set="blank_rows" t-value="chunk_size - len(page)"/>
+                            <t t-foreach="range(blank_rows)" t-as="i">
+                                <tr style="height: 30px;">
+                                    <td t-foreach="range(6)" t-as="j" style="border-left:1px solid #000; border-right:1px solid #000;border-top: 0 !important; border-bottom: 0 !important;"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <!-- table last line -->
+                        <t t-if="page == pages[-1]">
+                            <tr style="border-top: 0px!important; font-weight: bold;">
+                                <td colspan="2" style="border:1px solid #000; padding: 8px;">TOTAL</td>
+                                <td style="border:1px solid #000; padding: 8px;" class="text-center">
+                                    <span t-esc="sum(o.order_line.mapped('product_qty'))"/>
+                                </td>
+                                <td colspan="2" style="border:1px solid #000;"/>
+                                <td style="border:1px solid #000; padding: 8px;" class="text-end">
+                                    <span t-field="o.amount_untaxed"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </table>
+
+                    <!-- Amount in words and Updated Total Section -->
+                    <t t-if="page == pages[-1]">
+                        <div class="row" style="margin-top: 20px;">
+                            <div class="col-7">
+                                <div class="mt-1">
+                                    <!-- Split amount -->
+                                    <t t-set="riyals" t-value="int(o.amount_total)"/>
+                                    <t t-set="baisa" t-value="int(round((o.amount_total - riyals) * 1000))"/>
+
+                                    <!-- Convert number to words and clean currency text -->
+                                    <t t-set="riyal_words"
+                                       t-value="o.currency_id.amount_to_text(riyals)
+                                        .replace('Omani Riyals', '')
+                                        .replace('Omani Rial', '')
+                                        .replace('Rial Omani', '')
+                                        .replace('Rials', '')
+                                        .replace('Rial', '')
+                                        .strip()"/>
+
+                                    <strong>
+                                        In Words:
+                                        <span style="text-transform: capitalize;">
+                                            Omani Riyals
+                                            <t t-esc="riyal_words"/>
+                                            and Baiza <t t-esc="baisa"/>/1000 Only
+                                        </span>
+                                    </strong>
+                                </div>
+                                <!--                                <strong>Amount in Words:</strong><br/>-->
+                                <!--                                <span style="text-transform: capitalize;" t-esc="o.currency_id.amount_to_text(o.amount_total) + ' Only'"/>-->
+                            </div>
+                            <div class="col-5">
+                                <table style="width: 100%; border: 0 !important; border-spacing: 0 !important; border-collapse: separate !important;">
+                                    <tr>
+                                        <td style="text-align: right; padding: 5px; width: 60%;">Subtotal Amount</td>
+                                        <td style="text-align: right; padding: 5px; width: 40%;">
+                                            <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right; padding: 5px; width: 60%;">VAT</td>
+                                        <td style="text-align: right; padding: 5px; width: 40%;">
+                                            <span t-field="o.amount_tax" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr >
+                                        <td style="text-align: right; padding: 5px; border-top:1px solid #000!important; border-bottom:0px!important"><strong>TOTAL AMOUNT</strong></td>
+                                        <td style="text-align: right; padding: 5px; border-top:1px solid #000!important; border-bottom:0px!important">
+                                            <strong t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div t-if="o.boq_terms_conditions" style="margin-top: 20px;">
+                            <strong>Terms and Conditions:</strong>
+                            <div t-field="o.boq_terms_conditions"/>
+                        </div>
+
+                        <!-- Signature Section -->
+                        <div class="row" style="margin-top: 20px;">
+                            <div class="col-6 text-start">
+                                <div style="width: 150px; border-top: 1px solid #000; margin-bottom: 5px;"/>
+                                <strong>PREPARED BY</strong>
+                            </div>
+                            <div class="col-6 text-end">
+                                <div style="float: right; width: 150px; border-top: 1px solid #000; margin-bottom: 5px;"/>
+                                <br style="clear: both;"/>
+                                <strong>APPROVED BY</strong>
+                            </div>
+                        </div>
+                    </t>
+
+                    <!-- page break -->
+                    <t t-if="len(pages) &gt; 1 and page != pages[-1]">
+                        <div style="page-break-after: always;"/>
+                    </t>
+                </t>
+            </div>
+        </div>
+        <div class="footer" style="padding: 0 !important; margin: 0 !important; width: 100%!important;position:relative">
+
+            <div class="text-center" style="font-size: 10px; color: #777; padding: 5px 20px;position:absolute;right:0px">
+                Page <span class="page"/> of <span class="topage"/>
+            </div>
+
+            <div style="width: 100%; margin: 0; padding: 0;">
+                <img src="/ies_pdf_reports/static/src/images/footer.jpg" style="width: 100% !important; display: block; margin: 0; padding: 0;"/>
+            </div>
+
+        </div>
+    </template>
+<!--         <div class="text-center" style="font-size: 10px; color: #777; padding: 5px 20px;">-->
+<!--                Page <span class="page"/> of <span class="topage"/>-->
+<!--            </div>-->
+
+<!--        &lt;!&ndash; 4. FIXED FOOTER &ndash;&gt;-->
+<!--        <div class="footer" style="padding: 0 !important; margin: 0 !important; width: 100%!important;">-->
+<!--            <div class="width: 100%; margin: 0; padding: 0;" >-->
+<!--                <img src="/ies_pdf_reports/static/src/images/footer.jpg" style="width: 100% !important; display: block; margin: 0; padding: 0;"/>-->
+<!--            </div>-->
+
+<!--        </div>-->
+
+    <template id="iesi_report_purchaseorder">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="ies_pdf_reports.iesi_report_purchaseorder_document" t-lang="o.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+</odoo>

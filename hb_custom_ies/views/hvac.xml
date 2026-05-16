@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_hvac_item_tree" model="ir.ui.view">
+        <field name="name">hvac.item.tree</field>
+        <field name="model">hvac.item</field>
+        <field name="arch" type="xml">
+            <list string="HVAC Items">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hvac_item_form" model="ir.ui.view">
+        <field name="name">hvac.item.form</field>
+        <field name="model">hvac.item</field>
+        <field name="arch" type="xml">
+            <form string="HVAC Item">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="hv_unit_rate" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hvac_items" model="ir.actions.act_window">
+        <field name="name">HVAC Items</field>
+        <field name="res_model">hvac.item</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_hvac_root" name="HVAC"  parent="sale.menu_sale_config" action="action_hvac_items" sequence="10"/>
+<!--    <menuitem id="menu_hvac_items" name="Items" parent="menu_hvac_root" action="action_hvac_items"/>-->
+
+<!--    ##########################################Sundering################################-->
+     <record id="view_sundering_item_tree" model="ir.ui.view">
+        <field name="name">sundering.tree</field>
+        <field name="model">sundering</field>
+        <field name="arch" type="xml">
+            <list string="Sundring Items">
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sundering_item_form" model="ir.ui.view">
+        <field name="name">sundering.form</field>
+        <field name="model">sundering</field>
+        <field name="arch" type="xml">
+            <form string="Sundering Item">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="sun_unit_rate" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sundering_items" model="ir.actions.act_window">
+        <field name="name">sundering Items</field>
+        <field name="res_model">sundering</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_sundering_root" name="Sundring"  parent="sale.menu_sale_config"  action="action_sundering_items" sequence="11"/>
+
+<!--    <menuitem id="menu_sundering_items" name="Items" parent="menu_sundering_root" action="action_sundering_items"/>-->
+
+<!-- #######################################Measurement###############################   -->
+
+     <record id="view_measurement_item_tree" model="ir.ui.view">
+        <field name="name">measurement.tree</field>
+        <field name="model">measurement</field>
+        <field name="arch" type="xml">
+            <list string="Measurement Items">
+                <field name="measu_name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_measurement_item_form" model="ir.ui.view">
+        <field name="name">measurement.form</field>
+        <field name="model">measurement</field>
+        <field name="arch" type="xml">
+            <form string="Measurement Item">
+                <sheet>
+                    <group>
+                        <field name="measu_name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_measurement_items" model="ir.actions.act_window">
+        <field name="name">measurement Items</field>
+        <field name="res_model">measurement</field>
+        <field name="view_mode">list,form</field>
+    </record>
+            <menuitem
+            id="menu_measurement_root"
+            name="Measurement"
+            parent="sale.menu_reporting_salespeople"
+            sequence="11"
+             action="action_measurement_items"
+        />
+
+<!--        &lt;!&ndash; Sub Menu &ndash;&gt;-->
+<!--        <menuitem-->
+<!--            id="menu_measurement_items"-->
+<!--            name="Items"-->
+<!--            parent="menu_measurement_root"-->
+<!--            action="action_measurement_items"-->
+<!--        />-->
+
+
+</odoo>

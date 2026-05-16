@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_civil_item_tree" model="ir.ui.view">
+        <field name="name">civil.item.tree</field>
+        <field name="model">civil.item</field>
+        <field name="arch" type="xml">
+            <list string="Civil Items">
+                <field name="civil_item_name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_civil_item_form" model="ir.ui.view">
+        <field name="name">civil.item.form</field>
+        <field name="model">civil.item</field>
+        <field name="arch" type="xml">
+            <form string="Civil Item">
+                <sheet>
+                    <group>
+                        <field name="civil_item_name"/>
+                        <field name="civil_unit_rate"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_civil_items" model="ir.actions.act_window">
+        <field name="name">Civil Items</field>
+        <field name="res_model">civil.item</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_civil_root" name="Civil" parent="sale.menu_sale_config" action="action_civil_items" sequence="10"/>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_purchase_order_form_inherit_terms" model="ir.ui.view">
+    <field name="name">purchase.order.form.inherit.terms</field>
+    <field name="model">purchase.order</field>
+    <field name="inherit_id" ref="purchase.purchase_order_form"/>
+    <field name="arch" type="xml">
+
+        <xpath expr="//header//button[@name='action_rfq_send']" position="after">
+            <button name="print_custom_po" string="Print PO" type="object" class="btn-primary"/>
+        </xpath>
+        <!-- Add boq_terms_conditions above the notebook -->
+      <xpath expr="//page[@name='purchase_delivery_invoice']" position="after">
+            <page string="Quote Terms  Conditions" name="quote_terms_conditions_page">
+                <group>
+                    <field name="boq_terms_conditions" widget="html" options="{'sanitize': False}" colspan="4"/>
+                </group>
+            </page>
+        </xpath>
+
+<!--        &lt;!&ndash; Now add your new notebook page &ndash;&gt;-->
+<!--        <xpath expr="//notebook/page[last()]" position="after">-->
+<!--            <page string="Additional Notes" name="additional_notes_page">-->
+<!--                <group>-->
+<!--                    <field name="note"/>-->
+<!--                </group>-->
+<!--            </page>-->
+<!--        </xpath>-->
+
+    </field>
+</record>
+</odoo>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Project form view -->
+    <record id="project_task_inherit_view_form" model="ir.ui.view">
+        <field name="name">project.task.view.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='date_deadline_and_recurring_task']" position="after">
+                <field name="no_of_days"/>
+                <field name="project_type"/>
+                <field name="scope_type" invisible="1"/>
+                <field name="project_discipline_ids" widget="many2many_tags"/>
+                <field name="material_template_id"/>
+            </xpath>
+            <xpath expr="//button[@name='action_timer_start']" position="after">
+                <button name="action_material_request" type="object"
+                        string="Material Request" class="btn-primary"/>
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="action_view_material_request"
+                        icon="fa-credit-card">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Delivery Note</span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//page[@name='sub_tasks_page']" position="after">
+                <page string="Materials" name="custom_materials">
+                    <!-- Page content goes here -->
+                    <field name="material_line_ids">
+                        <list editable="bottom">
+                            <field name="project_id" column_invisible="1"/>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="uom_id"/>
+                            <field name="project_id" context="{'project_name_only': True}"/>
+                            <field name="status" decoration-info="status == 'to_delivered'"
+                                   decoration-success="status == 'delivered'" widget="badge"/>
+                            <field name="move_ids" widget="many2many_tags" column_invisible="1"/>
+                            <field name="done_qty" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

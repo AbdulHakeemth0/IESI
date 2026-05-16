@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_elv_item_tree" model="ir.ui.view">
+        <field name="name">elv.item.tree</field>
+        <field name="model">elv.item</field>
+        <field name="arch" type="xml">
+            <list string="ELV Items">
+                <field name="elv_item_name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_elv_item_form" model="ir.ui.view">
+        <field name="name">elv.item.form</field>
+        <field name="model">elv.item</field>
+        <field name="arch" type="xml">
+            <form string="ELV Item">
+                <sheet>
+                    <group>
+                        <field name="elv_item_name"/>
+                        <field name="elv_unit_rate"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_elv_items" model="ir.actions.act_window">
+        <field name="name">ELV Items</field>
+        <field name="res_model">elv.item</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_elv_root" name="ELV" parent="sale.menu_sale_config" action="action_elv_items" sequence="10"/>
+</odoo>

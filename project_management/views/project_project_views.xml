@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Project form view -->
+    <record id="project_project_inherit_view_form" model="ir.ui.view">
+        <field name="name">project.project.view.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_start']" position="after">
+                <field name="no_of_days"/>
+                <field name="project_type"/>
+                <field name="scope_type" invisible="1"/>
+                <field name="project_discipline_ids" widget="many2many_tags"/>
+                <field name="material_template_id"/>
+            </xpath>
+            <xpath expr="//div[@class='oe_title']" position="before">
+                <div class="oe_title custom_title">
+                    <h1>
+                        <field name="project_sequence"/>
+                    </h1>
+                </div>
+            </xpath>
+            <xpath expr="//button[@name='action_open_share_project_wizard']" position="after">
+                <button name="action_create_purchase" type="object"
+                        invisible="1"
+                        string="Purchase Order" class="btn-primary"/>
+            </xpath>
+            <xpath expr="//page[@name='settings']" position="after">
+                <page string="Materials Planning" name="custom_materials">
+                    <!-- Page content goes here -->
+                    <field name="material_line_ids">
+                        <list editable="bottom">
+                            <field name="project_id" column_invisible="1"/>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="qty_remaining"/>
+                            <field name="qty_requested"/>
+                            <field name="uom_id" readonly="1"/>
+                            <field name="task_id"/>
+                            <field name="status" decoration-info="status == 'to_delivered'"
+                                   decoration-success="status == 'delivered'" widget="badge"/>
+                            <field name="move_ids" widget="many2many_tags" column_invisible="1"/>
+                            <field name="done_qty" column_invisible="1"/>
+                        </list>
+                    </field>
+                </page>
+                <page string="Project Event" name="custom_events">
+                    <!-- Page content goes here -->
+                    <field name="project_event_line_ids">
+                        <list editable="bottom">
+                            <field name="project_id" column_invisible="1"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="event_id"/>
+                            <field name="description"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+            <xpath expr='//button[@name="action_view_tasks"]' position='after'>
+                <button class="oe_stat_button" type="object" invisible="1"
+                        name="action_view_purchases"
+                        icon="fa-credit-card">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Purchases</span>
+                    </div>
+                </button>
+                <button class="oe_stat_button" invisible="1" type="object"
+                        name="action_view_delivery_order"
+                        icon="fa-credit-card">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Delivery Note</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+    <record id="project_project_inherit_view_list" model="ir.ui.view">
+        <field name="name">project.project.view.list.inherit.code</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='display_name']" position="before">
+                <field name="project_sequence"/>
+            </xpath>
+
+        </field>
+    </record>
+    <record id="view_project_kanban_inherit_code" model="ir.ui.view">
+        <field name="name">project.project.kanban.inherit.code</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="before">
+                <div class="o_kanban_record_subtitle" style="margin-bottom: 8px; width: 100%;">
+
+                    <div style="display: inline-block; background-color: #e2e8f0; color: #475569; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-bottom: 6px; border: 1px solid #cbd5e1;">
+                        <i class="fa fa-hashtag mr-1" style="margin-right: 4px;"/>
+                        <field name="project_sequence"/>
+                    </div>
+
+                    <div t-att-title="record.name.value"
+                         style="display: block;
+                            background: linear-gradient(135deg, #70d774 0%, #58b95c 100%);
+                            color: white;
+                            padding: 8px 12px;
+                            border-radius: 8px;
+                            font-size: 14px;
+                            font-weight: 600;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            max-width: 100%;
+                            cursor: pointer;">
+                        <field name="name"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='display_name']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+
+        </field>
+    </record>
+
+</odoo>

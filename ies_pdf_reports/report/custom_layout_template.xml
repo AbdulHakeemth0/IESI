@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- EXTERNAL HEADER LAYOUT -->
+    <template id="external_layout_iesi_template_purchase_order">
+
+        <div class="header">
+
+            <div class="row">
+
+                <div class="col-6">
+                    <img t-if="o.company_id.logo"
+                         t-att-src="image_data_uri(o.company_id.logo)"
+                         style="max-height:110px;"/>
+                </div>
+
+                <div class="col-6 text-right">
+                    <h4 style="padding-top:40px;font-weight:bold;color:#1f2f45;">
+                        PURCHASE ORDER
+                    </h4>
+                </div>
+
+            </div>
+
+        </div>
+
+    </template>
+
+</odoo>

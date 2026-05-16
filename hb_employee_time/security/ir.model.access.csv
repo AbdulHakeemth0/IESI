@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_employee_remainder_user,hr.employee.remainder user,model_hr_employee_remainder,group_employee_remainder,1,1,1,0
+access_mode_payment_user,access_mode_payment_user,model_mode_payment,base.group_user,1,1,1,1
